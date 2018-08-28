@@ -30,11 +30,14 @@ const Header = () => {
 }
 
 export default class MainPage extends React.Component<{}, {}> {
+
+
+    
     render(){
         return(
             <>
                 <Header/>
-                <Grid rows={6} columns={13}/>
+                <Grid rows={6} columns={13} nodePositions={[{row:1, column:1}, {row:1, column:3}, {row:4,column:3}]}/>
             </>
         )
     }
