@@ -1,11 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import Row from './row'
+import {COLUMNS} from '../config'
 
 const BaseGrid = styled.div`
     display:flex;
     flex-direction:column;
-    width:50%;
+    width:${COLUMNS*50}px;
     padding:0;
     margin:auto;
     text-align:center;

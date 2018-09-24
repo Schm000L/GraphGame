@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import {Node, Block} from './blockcomponents'
 
 interface RowProps{
     id: number
@@ -14,41 +15,8 @@ const BaseRow = styled.div`
     height:50px;
     padding:0;
     margin:0;
-    margin-top:10px;
     &:nth-child(1) {
         margin-top:0;
-    }
-`
-const green = '0, 255, 0'
-const blue = '0, 0, 255'
-const white = '255, 255, 255'
-
-const Block = styled.div `
-    width:50px;
-    height:inherit;
-    background-color: rgba(${blue}, 0);
-    margin: 0;
-    &:nth-child(odd) {
-        background-color:rgba(${green}, 0);
-        &:hover {
-            background-color:rgba(${green}, 100);
-        }
-    }
-    &:nth-child(even) {
-        &:hover{
-            background-color:rgba(${blue}, 100);
-        }
-    }
-`
-
-const Node = styled.div `
-    width:50px;
-    height:inherit;
-    border-radius:25px;
-    background-color: rgb(${blue});
-    margin: 0;
-    &:hover {
-        background-color: rbg(${white});
     }
 `
 
