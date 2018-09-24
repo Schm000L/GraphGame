@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import Grid from './grid';
 import logo from '../logo.svg';
+import {ROWS, COLUMNS, NODE_POSITIONS} from '../config'
 
 const HeadBanner = styled.header `
     background-color: #222;
@@ -37,7 +38,7 @@ export default class MainPage extends React.Component<{}, {}> {
         return(
             <>
                 <Header/>
-                <Grid rows={6} columns={13} nodePositions={[{row:1, column:1}, {row:1, column:3}, {row:4,column:3}]}/>
+                <Grid rows={ROWS} columns={COLUMNS} nodePositions={NODE_POSITIONS}/>
             </>
         )
     }

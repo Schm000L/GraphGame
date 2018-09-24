@@ -21,12 +21,13 @@ const BaseRow = styled.div`
 `
 const green = '0, 255, 0'
 const blue = '0, 0, 255'
+const white = '255, 255, 255'
 
 const Block = styled.div `
     width:50px;
     height:inherit;
     background-color: rgba(${blue}, 0);
-    margin: auto;
+    margin: 0;
     &:nth-child(odd) {
         background-color:rgba(${green}, 0);
         &:hover {
@@ -45,9 +46,9 @@ const Node = styled.div `
     height:inherit;
     border-radius:25px;
     background-color: rgb(${blue});
-    margin: auto;
-    &:nth-child(odd) {
-        background-color:rgb(${green});
+    margin: 0;
+    &:hover {
+        background-color: rbg(${white});
     }
 `
 

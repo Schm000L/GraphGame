@@ -12,7 +12,7 @@ const BaseGrid = styled.div`
     border:1px solid hotpink;
 `
 
-interface NodePos {
+interface NodePosition {
     row: number
     column: number
 }
@@ -20,7 +20,7 @@ interface NodePos {
 interface GridProps {
     rows: number
     columns: number
-    nodePositions: NodePos[]
+    nodePositions: NodePosition[]
 }
 
 export default class Grid extends React.Component<GridProps,{}> {
