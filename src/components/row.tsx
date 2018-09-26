@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import {Node, Block} from './blockcomponents'
+import {Node, EmptyBlock} from './blockcomponents'
 
 interface RowProps{
     id: number
@@ -30,10 +30,10 @@ export default class Row extends React.Component<RowProps,{}>{
     render(){
         let toRender: any[] = []
         for(let i = 0; i<this.props.blocks; i++) {
-            this.props.nodePositions.includes(i) ? toRender.push((<Node key={'block'+i+Math.random}/>)) : toRender.push((<Block key={'block'+i+Math.random}/>))
+            this.props.nodePositions.includes(i) ? toRender.push((<Node key={'block'+i+Math.random}/>)) : toRender.push((<EmptyBlock key={'block'+i+Math.random}/>))
         }
 
-        console.log(toRender)
+        //console.log(toRender)
         return(<BaseRow>
             {toRender}
         </BaseRow>)
