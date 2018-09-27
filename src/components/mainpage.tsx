@@ -4,6 +4,11 @@ import Grid from './grid';
 import logo from '../logo.svg';
 import {ROWS, COLUMNS, NODE_POSITIONS} from '../config'
 
+// import {BLOCK} from './grid'
+// import {GridState, GridActions, gridReducer, changeBlock} from '../state-management/grid'
+// import { connect } from 'react-redux';
+// import { Dispatch } from 'redux';
+
 const HeadBanner = styled.header `
     background-color: #222;
     width:100 %;
@@ -30,7 +35,35 @@ const Header = () => {
     )
 }
 
-export default class MainPage extends React.Component<{}, {}> {
+// const mapStateToProps = (state: GridState) => {
+//     return {
+//       grid: gridReducer
+//     }
+//   }
+
+//   const mapDispatchToProps = (dispatch: Dispatch<GridActions>) => {
+//     return {
+//       changeBlock: changeBlock
+//     }
+//   }
+
+interface MainPageState {
+
+}
+
+interface MainPageProps extends StateProps, DispatchProps {
+
+}
+
+interface StateProps {
+    // grid: BLOCK[][]
+} 
+
+interface DispatchProps {
+    // changeBlock: typeof changeBlock
+}
+
+class MainPage extends React.Component<MainPageProps, MainPageState> {
     n: number = Math.floor(Math.random() * 8) + 3;
     i: number = 0;
     p1Edges: number[][] = new Array;
@@ -54,8 +87,8 @@ export default class MainPage extends React.Component<{}, {}> {
     // TODO: Skriv roligare generering av träd (ej kompletta träd.)
     private populateTree(n:number) {
         let edges: number[][]=new Array();
-        for(let i: number=0; i<n;i++) {
-            for(let j:number=0;j<n;j++) {
+        for(let i: number=0; i<n; i++) {
+            for(let j:number=0; j<n; j++) {
                 if(i<j) {
                     let edge: [number, number, number] = [i, j, Math.floor(Math.random()*6)+1];
                     edges.push(edge);
@@ -101,6 +134,7 @@ export default class MainPage extends React.Component<{}, {}> {
     }*/
     
     render(){
+        // console.log("Whoopie", this.props.grid)
         return(
             <>
                 <Header/>
@@ -109,3 +143,5 @@ export default class MainPage extends React.Component<{}, {}> {
         )
     }
 }
+
+export default MainPage

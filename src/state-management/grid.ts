@@ -1,6 +1,7 @@
-import {ROWS, COLUMNS} from '../config'
+// import {ROWS, COLUMNS} from '../config'
+import {Action, Reducer} from 'redux'
 
-type ChangeBlock = 'CHANGE_BLOCK'
+// type ChangeBlock = 'CHANGE_BLOCK'
 
 type NODE = "NODE"
 type EMPTYBLOCK = "EMPTYBLOCK"
@@ -15,51 +16,37 @@ type ALLDIRECTIONS = "ALLDIRECTIONS"
 
 type BLOCK = NODE|EMPTYBLOCK|LEFTRIGHT|UPDOWN|LEFTCENTER|LEFTDOWN|LEFTUP|RIGHTDOWN|RIGHTUP|ALLDIRECTIONS
 
-
-
-
-
-export type GridState = {
-  grid: BLOCK[][]
-} 
-
-let grid: BLOCK[][] = []
-for(let i = 0; i<ROWS;i++){
-    grid[i] = []
-    for(let j=0;j<COLUMNS;j++) {
-        grid[i][j] = "EMPTYBLOCK"
-    }
+export interface GridState {
+    grid: BLOCK[][]
 }
 
-export const initialGridState: GridState = {
-    grid: grid
+export enum gridActionTypes{
+    UPDATE_BLOCK
 }
 
-type ChangeAction = {
-    type: ChangeBlock
-    row: number
+export interface gridAction extends Action {
+    block:BLOCK,
+    row: number,
     column: number
-    block: BLOCK
-  }
+}
 
-export const changeColumns = (row: number, column: number, block:BLOCK):ChangeAction => ({
-    type: 'CHANGE_BLOCK',
-    row: row,
-    column: column,
-    block: block
-  })
+export const updateBlock = (block: BLOCK, row: number, column: number) => ({
+        type: gridActionTypes.UPDATE_BLOCK,
+        block: block,
+        row: row,
+        column: column
+})
 
-export type GridActions = ChangeAction
-
-export const gridReducer = (state: GridState = initialGridState, action: GridActions ) => {
-    switch (action.type) {
-
-      case 'CHANGE_BLOCK':
-      state.grid[action.row][action.column] = action.block
-      return Object.assign({},state, grid)
-
-      default:
-        return state
+export const gridReducer: Reducer<GridState> = (state: GridState= {grid: []}, action:gridAction) => {
+    switch(action.type) {
+        case gridActionTypes.UPDATE_BLOCK:
+            let grid: BLOCK[][] = []
+            for(let i = 0; i<state.grid.length; i++) {
+                grid[i] = [...state.grid[i]]
+            }
+            grid[action.row][action.column] = action.block
+            return Object.assign({}, state, {grid:grid})
+        default:
+            return state
     }
-  
 }

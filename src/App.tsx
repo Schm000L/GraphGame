@@ -6,9 +6,10 @@ import store from './state-management/store'
 class App extends React.Component {
   render() {
     if(store) 
-    return (<Provider store={store}>
+    return (
+      <Provider store={store}>
         <MainPage/>
-        </Provider>
+      </Provider>
     )
     else
     return (

@@ -1,8 +1,7 @@
-import { createStore } from 'redux'
-import {rootReducer, initialState} from './combiner'
-// const store = createStore(rootReducer, {}, window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+// import * as React from 'react'
+import {createStore, Store} from 'redux'
+import {GridState, gridReducer} from './grid'
+import { composeWithDevTools } from 'redux-devtools-extension'
 
-const enhancer = window['devToolsExtension'] ? window['devToolsExtension']()(createStore) : createStore;
-const store: any = enhancer(rootReducer, initialState);
-
+const store:Store<GridState> = createStore(gridReducer,composeWithDevTools())
 export default store
