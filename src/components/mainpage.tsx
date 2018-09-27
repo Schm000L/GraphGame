@@ -4,10 +4,10 @@ import Grid from './grid';
 import logo from '../logo.svg';
 import {ROWS, COLUMNS, NODE_POSITIONS} from '../config'
 
-// import {BLOCK} from './grid'
-// import {GridState, GridActions, gridReducer, changeBlock} from '../state-management/grid'
-// import { connect } from 'react-redux';
-// import { Dispatch } from 'redux';
+import {BLOCK} from './grid'
+import {updateBlock, gridAction, GridState} from '../state-management/grid'
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
 
 const HeadBanner = styled.header `
     background-color: #222;
@@ -35,17 +35,17 @@ const Header = () => {
     )
 }
 
-// const mapStateToProps = (state: GridState) => {
-//     return {
-//       grid: gridReducer
-//     }
-//   }
+const mapStateToProps = (state: GridState) => {
+    return {
+      grid: state.grid
+    }
+  }
 
-//   const mapDispatchToProps = (dispatch: Dispatch<GridActions>) => {
-//     return {
-//       changeBlock: changeBlock
-//     }
-//   }
+const mapDispatchToProps = (dispatch: Dispatch<gridAction>) => {
+    return {
+      updateBlock: updateBlock
+    }
+}
 
 interface MainPageState {
 
@@ -56,11 +56,11 @@ interface MainPageProps extends StateProps, DispatchProps {
 }
 
 interface StateProps {
-    // grid: BLOCK[][]
+    grid: BLOCK[][]
 } 
 
 interface DispatchProps {
-    // changeBlock: typeof changeBlock
+    updateBlock: typeof updateBlock
 }
 
 class MainPage extends React.Component<MainPageProps, MainPageState> {
@@ -74,7 +74,10 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
 
     nodes = this.createNodes(this.n);
     edges = this.populateTree(this.n);
-    //console.log("eLen: " + edges.length);
+
+    // componentDidMount() {
+    //     this.props.updateBlock("NODE", 2,2)
+    // }
 
     private createNodes(n:number):number[] {
         let nodes: number[]=[];
@@ -134,7 +137,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
     }*/
     
     render(){
-        // console.log("Whoopie", this.props.grid)
+        console.log("Whoopie", this.props.grid[2][2])
         return(
             <>
                 <Header/>
@@ -144,4 +147,4 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
     }
 }
 
-export default MainPage
+export default connect(mapStateToProps, mapDispatchToProps)(MainPage)
