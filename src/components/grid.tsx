@@ -1,7 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import Row from './row'
-import {COLUMNS, ROWS} from '../config'
+import {COLUMNS} from '../config'
+import { GridState, updateBlock } from '../state-management/grid';
+import { connect } from 'react-redux';
 
 const BaseGrid = styled.div`
     position:relative;
@@ -13,17 +15,6 @@ const BaseGrid = styled.div`
     text-align:center;
     border:1px solid hotpink;
 `
-
-interface NodePosition {
-    row: number
-    column: number
-}
-
-interface GridProps {
-    rows: number
-    columns: number
-    nodePositions: NodePosition[]
-}
 
 type NODE = "NODE"
 type EMPTYBLOCK = "EMPTYBLOCK"
@@ -38,33 +29,46 @@ type ALLDIRECTIONS = "ALLDIRECTIONS"
 
 export type BLOCK = NODE|EMPTYBLOCK|LEFTRIGHT|UPDOWN|LEFTCENTER|LEFTDOWN|LEFTUP|RIGHTDOWN|RIGHTUP|ALLDIRECTIONS
 
-export default class Grid extends React.Component<GridProps,{}> {
-    private grid: BLOCK[][]
-    constructor(GridProps: GridProps) {
-        super(GridProps)
-        this.grid = []
+interface NodePosition {
+    row: number
+    column: number
+}
 
-        for(let i = 0; i<ROWS; i++) {
-            this.grid[i] = []
-            for(let j=0; j<COLUMNS;j++) {
-                this.grid[i][j] = "NODE"
-            }
-        }
+interface GridProps extends StateProps, DispatchProps {
+    rows: number
+    columns: number
+    nodePositions: NodePosition[]
+}
+
+interface StateProps {
+    grid: BLOCK[][]
+} 
+
+interface DispatchProps {
+    updateBlock: typeof updateBlock
+}
+
+const mapStateToProps = (state: GridState) => {
+    return {
+      grid: state.grid
     }
+  }
 
-    
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+      updateBlock: (block: BLOCK, row: number, column: number) => dispatch(updateBlock(block, row, column))
+    }
+}
 
+class Grid extends React.Component<GridProps,{}> {
     render(){
-        this.grid[1][1] = "EMPTYBLOCK"
-        console.log(this.grid[1][1])
         let toRender: React.ReactElement<Row>[] = []
-        for(let i = 0; i<this.props.rows; i++) {
+        for(let i = 0; i<this.props.grid.length; i++) {
             let nodesOnRow: number[] = []
-            this.props.nodePositions.forEach(NodePos => {
-                if (NodePos.row === i) nodesOnRow.push(NodePos.column)
-                // console.log(i, "Row", NodePos.row, "Col", NodePos.column)
-            }); 
-            // console.log("Row:", i, "NodesOnRow:", nodesOnRow)
+            this.props.grid[i].forEach((block: BLOCK, index: number) => {
+                if(block === "NODE")
+                    nodesOnRow.push(index)
+            })
             toRender.push((<Row blocks={this.props.columns} id={i} nodePositions={nodesOnRow} key={"Row"+i}/>))
         }
 
@@ -75,3 +79,5 @@ export default class Grid extends React.Component<GridProps,{}> {
         )
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Grid)

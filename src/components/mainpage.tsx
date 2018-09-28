@@ -5,8 +5,7 @@ import logo from '../logo.svg';
 import {ROWS, COLUMNS, NODE_POSITIONS} from '../config'
 
 import {BLOCK} from './grid'
-import {updateBlock, gridAction, GridState} from '../state-management/grid'
-import { Dispatch } from 'redux';
+import {updateBlock, GridState} from '../state-management/grid'
 import { connect } from 'react-redux';
 
 const HeadBanner = styled.header `
@@ -41,9 +40,9 @@ const mapStateToProps = (state: GridState) => {
     }
   }
 
-const mapDispatchToProps = (dispatch: Dispatch<gridAction>) => {
+const mapDispatchToProps = (dispatch: any) => {
     return {
-      updateBlock: updateBlock
+      updateBlock: (block: BLOCK, row: number, column: number) => dispatch(updateBlock(block, row, column))
     }
 }
 
@@ -75,9 +74,10 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
     nodes = this.createNodes(this.n);
     edges = this.populateTree(this.n);
 
-    // componentDidMount() {
-    //     this.props.updateBlock("NODE", 2,2)
-    // }
+    componentDidMount() {
+        this.props.updateBlock("NODE", 1, 1)
+        this.props.updateBlock("NODE", 2,2)
+    }
 
     private createNodes(n:number):number[] {
         let nodes: number[]=[];
@@ -137,7 +137,6 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
     }*/
     
     render(){
-        console.log("Whoopie", this.props.grid[2][2])
         return(
             <>
                 <Header/>
