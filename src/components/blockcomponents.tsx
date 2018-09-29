@@ -9,10 +9,10 @@ const white = '255, 255, 255'
 export const EmptyBlock = styled.div `
     width:50px;
     height:inherit;
-    background-color: rgba(200, 200, 10, 100);
+    background-color: rgb(200, 200, 10);
     margin: 0;
     &:nth-child(odd) {
-        background-color:rgba(10, 200, 10, 100);
+        background-color:rgb(10, 200, 10);
         &:hover {
             background-color:rgba(${green}, 100);
         }
@@ -84,6 +84,27 @@ const Right = styled.div`
     background-color:rgba(${red}, 100);
 `
 
+export type EdgeProps = {
+    top: number,
+    left: number,
+    width: number,
+    rotation: number,
+    zIndex: number
+}
+
+export const Edge = styled.div`
+    position: absolute;
+    top:${(props:EdgeProps) => props.top} px;
+    left:${(props:EdgeProps) => props.left} px;
+
+    height:10px;
+    background-color:123 12 35;
+
+    width:${(props:EdgeProps) => props.width}px;
+    transform: rotate(${(props:EdgeProps)=>props.rotation} deg);
+    z-index:${(props:EdgeProps) => props.zIndex};
+` 
+
 export const LeftRight = () =>  <BContainer><Left/><Center/><Right/></BContainer>
 export const UpDown = () =>  <BContainer><Top/><Center/><Bottom/></BContainer>
 export const LeftCenter = () => <BContainer><Left/><Center/><Bottom/><Top/><Right/></BContainer>
@@ -94,13 +115,25 @@ export const RightUp = () => <BContainer><Center/><Top/><Right/></BContainer>
 export const AllDirections = () => <BContainer><Left/><Center/><Bottom/><Top/><Right/></BContainer>
 
 
-export const Node = styled.div `
+const NodeContainer = styled.div `
+    position:relative;
+    width:50px;
+    height:50px;
+    margin: 0;
+    background-color:rbg(200, 200, 10);
+    &:nth-child(odd) {
+        background-color:rgb(10, 200, 10);
+    }
+`
+
+const NODE = styled.div `
     width:50px;
     height:inherit;
     border-radius:25px;
     background-color: rgb(${blue});
     margin: 0;
     &:hover {
-        background-color: rbg(${white});
+        background-color:rgb(${white});
     }
 `
+export const Node = () => <NodeContainer><NODE/></NodeContainer>

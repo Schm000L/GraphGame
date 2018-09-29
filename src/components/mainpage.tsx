@@ -2,9 +2,8 @@ import * as React from 'react'
 import styled from 'styled-components'
 import Grid from './grid';
 import logo from '../logo.svg';
-import {ROWS, COLUMNS, NODE_POSITIONS} from '../config'
+import {Block, ROWS, COLUMNS} from '../config'
 
-import {BLOCK} from './grid'
 import {updateBlock, GridState} from '../state-management/grid'
 import { connect } from 'react-redux';
 
@@ -42,7 +41,7 @@ const mapStateToProps = (state: GridState) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-      updateBlock: (block: BLOCK, row: number, column: number) => dispatch(updateBlock(block, row, column))
+      updateBlock: (block: Block, row: number, column: number) => dispatch(updateBlock(block, row, column))
     }
 }
 
@@ -55,7 +54,7 @@ interface MainPageProps extends StateProps, DispatchProps {
 }
 
 interface StateProps {
-    grid: BLOCK[][]
+    grid: Block[][]
 } 
 
 interface DispatchProps {
@@ -73,11 +72,6 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
 
     nodes = this.createNodes(this.n);
     edges = this.populateTree(this.n);
-
-    componentDidMount() {
-        this.props.updateBlock("NODE", 1, 1)
-        this.props.updateBlock("NODE", 2,2)
-    }
 
     private createNodes(n:number):number[] {
         let nodes: number[]=[];
@@ -140,7 +134,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         return(
             <>
                 <Header/>
-                <Grid rows={ROWS} columns={COLUMNS} nodePositions={NODE_POSITIONS}/>
+                <Grid rows={ROWS} columns={COLUMNS}/>
             </>
         )
     }

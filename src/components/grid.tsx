@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import Row from './row'
-import {COLUMNS} from '../config'
+import {Block, COLUMNS} from '../config'
 import { GridState, updateBlock } from '../state-management/grid';
 import { connect } from 'react-redux';
 
@@ -16,32 +16,13 @@ const BaseGrid = styled.div`
     border:1px solid hotpink;
 `
 
-type NODE = "NODE"
-type EMPTYBLOCK = "EMPTYBLOCK"
-type LEFTRIGHT = "LEFTRIGHT"
-type UPDOWN = "UPDOWN"
-type LEFTCENTER = "LEFTCENTER"
-type LEFTDOWN = "LEFTDOWN"
-type LEFTUP = "LEFTUP"
-type RIGHTDOWN = "RIGHTDOWN"
-type RIGHTUP = "RIGHTUP"
-type ALLDIRECTIONS = "ALLDIRECTIONS"
-
-export type BLOCK = NODE|EMPTYBLOCK|LEFTRIGHT|UPDOWN|LEFTCENTER|LEFTDOWN|LEFTUP|RIGHTDOWN|RIGHTUP|ALLDIRECTIONS
-
-interface NodePosition {
-    row: number
-    column: number
-}
-
 interface GridProps extends StateProps, DispatchProps {
     rows: number
     columns: number
-    nodePositions: NodePosition[]
 }
 
 interface StateProps {
-    grid: BLOCK[][]
+    grid: Block[][]
 } 
 
 interface DispatchProps {
@@ -56,7 +37,7 @@ const mapStateToProps = (state: GridState) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-      updateBlock: (block: BLOCK, row: number, column: number) => dispatch(updateBlock(block, row, column))
+      updateBlock: (block: Block, row: number, column: number) => dispatch(updateBlock(block, row, column))
     }
 }
 
@@ -65,7 +46,7 @@ class Grid extends React.Component<GridProps,{}> {
         let toRender: React.ReactElement<Row>[] = []
         for(let i = 0; i<this.props.grid.length; i++) {
             let nodesOnRow: number[] = []
-            this.props.grid[i].forEach((block: BLOCK, index: number) => {
+            this.props.grid[i].forEach((block: Block, index: number) => {
                 if(block === "NODE")
                     nodesOnRow.push(index)
             })
