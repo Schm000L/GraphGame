@@ -43,3 +43,4 @@ export type Block = NODE|EMPTYBLOCK|LEFTRIGHT|UPDOWN|LEFTCENTER|LEFTDOWN|LEFTUP|
 
 // v1.x.x - Flexboxes, "pipes"
 // v2.x.x - Absolute positioning, direct edges utilizing z-values
+// Will likely skip "pipes" implementation

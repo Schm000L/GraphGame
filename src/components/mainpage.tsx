@@ -4,8 +4,9 @@ import Grid from './grid';
 import logo from '../logo.svg';
 import {Block, ROWS, COLUMNS} from '../config'
 
-import {updateBlock, GridState} from '../state-management/grid'
+import {updateBlock} from '../state-management/grid'
 import { connect } from 'react-redux';
+import { RootState } from '../state-management/combiner';
 
 const HeadBanner = styled.header `
     background-color: #222;
@@ -33,9 +34,9 @@ const Header = () => {
     )
 }
 
-const mapStateToProps = (state: GridState) => {
+const mapStateToProps = (state: RootState) => {
     return {
-      grid: state.grid
+      grid: state.gridReducer.grid
     }
   }
 

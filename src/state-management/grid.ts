@@ -1,8 +1,6 @@
 import {Action, Reducer} from 'redux'
 import {Block, ROWS, COLUMNS, NODE_POSITIONS } from '../config';
 
-
-
 let initialGrid:Block[][] = []
 for(let i = 0; i<ROWS; i++) {
     initialGrid[i] = []

@@ -1,7 +1,7 @@
 // import * as React from 'react'
 import {createStore, Store} from 'redux'
-import {GridState, gridReducer} from './grid'
+import {RootState, rootReducer} from './combiner'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
-const store:Store<GridState> = createStore(gridReducer,composeWithDevTools())
+const store:Store<RootState> = createStore(rootReducer,composeWithDevTools())
 export default store

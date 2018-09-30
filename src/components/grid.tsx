@@ -1,9 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import Row from './row'
-import {Block, COLUMNS} from '../config'
-import { GridState, updateBlock } from '../state-management/grid';
+import {Block, COLUMNS, ROWS} from '../config'
+import { updateBlock } from '../state-management/grid';
 import { connect } from 'react-redux';
+import { RootState } from '../state-management/combiner';
+import {Edge} from './blockcomponents'
 
 const BaseGrid = styled.div`
     position:relative;
@@ -29,9 +31,9 @@ interface DispatchProps {
     updateBlock: typeof updateBlock
 }
 
-const mapStateToProps = (state: GridState) => {
+const mapStateToProps = (state: RootState) => {
     return {
-      grid: state.grid
+      grid: state.gridReducer.grid
     }
   }
 
@@ -42,6 +44,11 @@ const mapDispatchToProps = (dispatch: any) => {
 }
 
 class Grid extends React.Component<GridProps,{}> {
+
+    // componentDidMount(){
+    //     this.props.updateBlock("NODE", 0, 5)
+    // }
+
     render(){
         let toRender: React.ReactElement<Row>[] = []
         for(let i = 0; i<this.props.grid.length; i++) {
@@ -56,6 +63,7 @@ class Grid extends React.Component<GridProps,{}> {
         return(
             <BaseGrid style={{width: 50*this.props.rows+''}}>
                {toRender}
+              <Edge top={50*ROWS/2-10/2} left={50*COLUMNS/2-200/2} width={200} rotation={0} zIndex={1}/>
             </BaseGrid>
         )
     }

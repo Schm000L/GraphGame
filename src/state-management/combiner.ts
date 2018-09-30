@@ -1,6 +1,11 @@
+import {Reducer, combineReducers} from 'redux'
 import {GridState, gridReducer} from './grid'
-import {Reducer} from 'redux'
 
-export interface RootState extends GridState {}
 
-export const RootReducer: Reducer<RootState>  = gridReducer
+export interface RootState {
+    gridReducer: GridState
+}
+
+export const rootReducer: Reducer<RootState>  = combineReducers( {
+    gridReducer
+})

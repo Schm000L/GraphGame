@@ -94,14 +94,14 @@ export type EdgeProps = {
 
 export const Edge = styled.div`
     position: absolute;
-    top:${(props:EdgeProps) => props.top} px;
-    left:${(props:EdgeProps) => props.left} px;
+    top:${(props:EdgeProps) => props.top}px;
+    left:${(props:EdgeProps) => props.left}px;
 
     height:10px;
-    background-color:123 12 35;
+    background-color: rgb(123 12 35);
 
     width:${(props:EdgeProps) => props.width}px;
-    transform: rotate(${(props:EdgeProps)=>props.rotation} deg);
+    transform: rotate(${(props:EdgeProps)=>props.rotation}deg);
     z-index:${(props:EdgeProps) => props.zIndex};
 ` 
 
@@ -120,7 +120,7 @@ const NodeContainer = styled.div `
     width:50px;
     height:50px;
     margin: 0;
-    background-color:rbg(200, 200, 10);
+    background-color:rgb(200, 200, 10);
     &:nth-child(odd) {
         background-color:rgb(10, 200, 10);
     }
