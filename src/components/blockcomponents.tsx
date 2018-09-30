@@ -96,13 +96,17 @@ export const Edge = styled.div`
     position: absolute;
     top:${(props:EdgeProps) => props.top}px;
     left:${(props:EdgeProps) => props.left}px;
-
     height:10px;
-    background-color: rgb(123 12 35);
-
+    
     width:${(props:EdgeProps) => props.width}px;
-    transform: rotate(${(props:EdgeProps)=>props.rotation}deg);
+    transform-origin:0 0 0;
+    transform: rotate(${(props:EdgeProps)=>props.rotation}rad);
     z-index:${(props:EdgeProps) => props.zIndex};
+    &:hover {
+        border:2px solid white;
+        height:6px;
+        width:${(props:EdgeProps) => props.width-4}px;
+    }
 ` 
 
 export const LeftRight = () =>  <BContainer><Left/><Center/><Right/></BContainer>

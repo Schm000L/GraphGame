@@ -29,7 +29,8 @@ export const NODE_POSITIONS: {[row:number]:number[]} = NP
 export type Edge = [number, number, number]
 
 export const EDGES: Edge[] = [
-    [0,1,1], [0,2,1], [2,3,1], [4,5,1], [5,6,1]
+    // [0,4,1], [2,3,1]
+    [0,1,1], [0,2,1], [2,3,1], [4,5,1], [3,5,1]
 ]
 
 

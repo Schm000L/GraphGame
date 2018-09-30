@@ -1,11 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import Row from './row'
-import {Block, COLUMNS, ROWS} from '../config'
+import {Block, COLUMNS, EDGES} from '../config'
 import { updateBlock } from '../state-management/grid';
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
-import {Edge} from './blockcomponents'
+import { Edge } from './blockcomponents'
+import { edgeParameters } from '../helpers/edgemath';
 
 const BaseGrid = styled.div`
     position:relative;
@@ -48,6 +49,20 @@ class Grid extends React.Component<GridProps,{}> {
     // componentDidMount(){
     //     this.props.updateBlock("NODE", 0, 5)
     // }
+    renderEdges(){
+        // let toRender: React.ReactElement<any>[] = []
+        let toRender = EDGES.map((edge:[number, number, number], index:number) => {
+            let [top, left, width, rotation] = edgeParameters(edge)
+            let color = [Math.random()*255, Math.random()*255,Math.random()*255]
+            let inlineStyle = {
+                backgroundColor: `rgb(${color[0]} ${color[1]} ${color[2]})`
+            }
+            return <Edge top={top} left={left} width={width} rotation={rotation} zIndex={index} style={inlineStyle} key={"edge" + Math.random + index}/>
+        })
+
+        // toRender.push(<Edge top={0} left={0} width={200} rotation={0} zIndex={1}/>)
+        return toRender
+    }
 
     render(){
         let toRender: React.ReactElement<Row>[] = []
@@ -63,7 +78,7 @@ class Grid extends React.Component<GridProps,{}> {
         return(
             <BaseGrid style={{width: 50*this.props.rows+''}}>
                {toRender}
-              <Edge top={50*ROWS/2-10/2} left={50*COLUMNS/2-200/2} width={200} rotation={0} zIndex={1}/>
+                {this.renderEdges()}
             </BaseGrid>
         )
     }
