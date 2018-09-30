@@ -1,7 +1,9 @@
 export const ROWS:number = 7
 export const COLUMNS:number = 13
+export const BLOCKSIZE = 50
 
-export const NODES: [number, number][] = [
+export type Node = [number, number]
+export const NODES: Node[] = [
     [0,0], [2,0], [2,2], [4,2], [6,6], [6,12]
 ]
 
@@ -24,7 +26,9 @@ export const NODE_POSITIONS: {[row:number]:number[]} = NP
 //      6:[6,12]
 
 // [firstNode, secondNode, value]
-export const EDGES: [number, number, number][] = [
+export type Edge = [number, number, number]
+
+export const EDGES: Edge[] = [
     [0,1,1], [0,2,1], [2,3,1], [4,5,1], [5,6,1]
 ]
 
