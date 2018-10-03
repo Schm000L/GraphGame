@@ -38,6 +38,7 @@ export const updateBlock = (block:Block, row: number, column: number) => ({
 })
 
 export const changeGrid = (grid:Block[][]) => ({
+    type: gridActionTypes.CHANGE_GRID,
     grid: grid
 })
 

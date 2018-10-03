@@ -109,6 +109,23 @@ export const Edge = styled.div`
     }
 ` 
 
+export const EdgeComponent = styled.div`
+    position: absolute;
+    top:${(props:EdgeProps) => props.top}px;
+    left:${(props:EdgeProps) => props.left}px;
+    height:10px;
+    
+    width:${(props:EdgeProps) => props.width}px;
+    transform-origin:0 0 0;
+    transform: rotate(${(props:EdgeProps)=>props.rotation}rad);
+    z-index:${(props:EdgeProps) => props.zIndex};
+    &:hover {
+        border:2px solid white;
+        height:6px;
+        width:${(props:EdgeProps) => props.width-4}px;
+    }
+` 
+
 export const LeftRight = () =>  <BContainer><Left/><Center/><Right/></BContainer>
 export const UpDown = () =>  <BContainer><Top/><Center/><Bottom/></BContainer>
 export const LeftCenter = () => <BContainer><Left/><Center/><Bottom/><Top/><Right/></BContainer>

@@ -8,6 +8,13 @@ import {updateBlock} from '../state-management/grid'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
 
+/* TODO:
+ * Use generation alg to get nodes and edges
+ * Moving some logic from grid.tsx to mainpage
+ * Check if edge to be claimed already has been claimed by someone
+ * Represent edges as {[firstNode:number]: {secondNode:number, value: number}} instead of [number, number, number]?
+ */
+
 const HeadBanner = styled.header `
     background-color: #222;
     width:100 %;

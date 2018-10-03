@@ -3,9 +3,10 @@ import styled from 'styled-components'
 import Row from './row'
 import {Block, COLUMNS, EDGES} from '../config'
 import { updateBlock } from '../state-management/grid';
+import { claimEdge} from '../state-management/edges'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
-import { Edge } from './blockcomponents'
+import Edge from './edge'
 import { edgeParameters } from '../helpers/edgemath';
 
 const BaseGrid = styled.div`
@@ -29,38 +30,40 @@ interface StateProps {
 } 
 
 interface DispatchProps {
-    updateBlock: typeof updateBlock
+    updateBlock: typeof updateBlock,
+    claimEdge: typeof claimEdge
 }
 
 const mapStateToProps = (state: RootState) => {
     return {
-      grid: state.gridReducer.grid
+        grid: state.gridReducer.grid,
+        edges: state.edgeReducer.edges,
+        p1Edges: state.edgeReducer.p1Edges,
+        p2Edges: state.edgeReducer.p2Edges
     }
-  }
+}
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-      updateBlock: (block: Block, row: number, column: number) => dispatch(updateBlock(block, row, column))
+      updateBlock: (block: Block, row: number, column: number) => dispatch(updateBlock(block, row, column)),
+      claimEdge: (edge: [number, number, number], player: boolean) => dispatch(claimEdge(edge, player))
     }
 }
 
 class Grid extends React.Component<GridProps,{}> {
+    p1sTurn: boolean = true
 
-    // componentDidMount(){
-    //     this.props.updateBlock("NODE", 0, 5)
-    // }
+    edgeClick = (edge:[number, number, number]) => {
+        this.props.claimEdge(edge, this.p1sTurn)
+        this.p1sTurn = !this.p1sTurn
+    }
+
     renderEdges(){
         // let toRender: React.ReactElement<any>[] = []
         let toRender = EDGES.map((edge:[number, number, number], index:number) => {
             let [top, left, width, rotation] = edgeParameters(edge)
-            let color = [Math.random()*255, Math.random()*255,Math.random()*255]
-            let inlineStyle = {
-                backgroundColor: `rgb(${color[0]} ${color[1]} ${color[2]})`
-            }
-            return <Edge top={top} left={left} width={width} rotation={rotation} zIndex={index} style={inlineStyle} key={"edge" + Math.random + index}/>
+            return <Edge top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} dispatch={this.edgeClick} key={"edge" + Math.random + index}/>
         })
-
-        // toRender.push(<Edge top={0} left={0} width={200} rotation={0} zIndex={1}/>)
         return toRender
     }
 
