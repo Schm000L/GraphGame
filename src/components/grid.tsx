@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import Row from './row'
-import {Block, COLUMNS, EDGES} from '../config'
+import {Block, COLUMNS, Node} from '../config'
 import { updateBlock } from '../state-management/grid';
 import { claimEdge} from '../state-management/edges'
 import { connect } from 'react-redux';
@@ -23,10 +23,15 @@ const BaseGrid = styled.div`
 interface GridProps extends StateProps, DispatchProps {
     rows: number
     columns: number
+    nodes: Node[]
 }
 
 interface StateProps {
-    grid: Block[][]
+    grid: Block[][],
+    edges: [number, number, number][],
+    p1Edges:[number, number, number][],
+    p2Edges:[number, number, number][],
+    reduxNodes: Node[]
 } 
 
 interface DispatchProps {
@@ -39,7 +44,8 @@ const mapStateToProps = (state: RootState) => {
         grid: state.gridReducer.grid,
         edges: state.edgeReducer.edges,
         p1Edges: state.edgeReducer.p1Edges,
-        p2Edges: state.edgeReducer.p2Edges
+        p2Edges: state.edgeReducer.p2Edges,
+        reduxNodes: state.nodeReducer.nodes
     }
 }
 
@@ -54,20 +60,20 @@ class Grid extends React.Component<GridProps,{}> {
     p1sTurn: boolean = true
 
     edgeClick = (edge:[number, number, number]) => {
+        console.log("Clicked on", this.props.reduxNodes[edge[0]], this.props.reduxNodes[edge[1]])
         this.props.claimEdge(edge, this.p1sTurn)
         this.p1sTurn = !this.p1sTurn
     }
 
     renderEdges(){
-        // let toRender: React.ReactElement<any>[] = []
-        let toRender = EDGES.map((edge:[number, number, number], index:number) => {
-            let [top, left, width, rotation] = edgeParameters(edge)
+        return this.props.edges.map((edge:[number, number, number], index:number) => {
+            let [top, left, width, rotation] = edgeParameters(this.props.nodes[edge[0]], this.props.nodes[edge[1]])
             return <Edge top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} dispatch={this.edgeClick} key={"edge" + Math.random + index}/>
         })
-        return toRender
     }
 
     render(){
+        if(this.props.grid) {
         let toRender: React.ReactElement<Row>[] = []
         for(let i = 0; i<this.props.grid.length; i++) {
             let nodesOnRow: number[] = []
@@ -84,6 +90,8 @@ class Grid extends React.Component<GridProps,{}> {
                 {this.renderEdges()}
             </BaseGrid>
         )
+        }
+        return(<h1>GRID UNDEFINED</h1>)
     }
 }
 

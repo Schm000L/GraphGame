@@ -1,4 +1,3 @@
-// import * as React from 'react'
 import {createStore, Store} from 'redux'
 import {RootState, rootReducer} from './combiner'
 import { composeWithDevTools } from 'redux-devtools-extension'

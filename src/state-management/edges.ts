@@ -13,13 +13,9 @@ export interface EdgeState {
     p2Edges: Edge[]
 }
 
-export enum edgeActionTypes{
-    UPDATE_EDGE,
-    CHANGE_EDGES,
-    CLAIM_EDGE
-}
-
-
+const UPDATE_EDGE = "UPDATE_EDGE"
+const CHANGE_EDGES = "CHANGE_EDGES"
+const CLAIM_EDGE = "CLAIM_EDGE"
 
 export interface edgeAction extends Action, updateEdgeAction, changeEdgesAction, claimEdgesAction {}
 
@@ -38,33 +34,33 @@ export interface claimEdgesAction {
 }
 
 export const updateEdge = (edge:Edge, node: Node) => ({
-        type: edgeActionTypes.UPDATE_EDGE,
+        type: UPDATE_EDGE,
         edge: edge,
         node: node
 })
 
 export const changeEdges = (edges: Edge[]) => ({
-    type: edgeActionTypes.CHANGE_EDGES,
+    type: CHANGE_EDGES,
     edges: edges
 })
 
 export const claimEdge = (edge:Edge, player: boolean) => ({
-    type: edgeActionTypes.CLAIM_EDGE,
+    type: CLAIM_EDGE,
     edge: edge,
     player: player
 })
 
 export const edgeReducer: Reducer<EdgeState> = (state: EdgeState=intialState, action:edgeAction) => {
     switch(action.type) {
-        case edgeActionTypes.UPDATE_EDGE:
+        case UPDATE_EDGE:
         // Kanske måste gå tillbaka till Object.assign
             return Object.assign({}, state, {edge:action.edge})
         
-        case edgeActionTypes.CHANGE_EDGES:
+        case CHANGE_EDGES:
           return Object.assign({}, state, {edges:action.edges})
             
         // TODO: Do check to not allow duplicates and claiming the other player's edges
-        case edgeActionTypes.CLAIM_EDGE:
+        case CLAIM_EDGE:
             return action.player ? Object.assign({}, state, {p1Edges: [...state.p1Edges, action.edge]}) : Object.assign({},state, {p2Edges: [...state.p2Edges, action.edge]})
 
         default:

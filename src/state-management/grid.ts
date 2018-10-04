@@ -13,10 +13,8 @@ export interface GridState {
     grid:Block[][]
 }
 
-export enum gridActionTypes{
-    UPDATE_BLOCK,
-    CHANGE_GRID
-}
+const UPDATE_BLOCK = "UPDATE_BLOCK"
+const CHANGE_GRID = "CHANGE_GRID"
 
 export interface gridAction extends Action, updateBlockAction, changeGridAction {}
 
@@ -31,20 +29,20 @@ export interface changeGridAction {
 }
 
 export const updateBlock = (block:Block, row: number, column: number) => ({
-        type: gridActionTypes.UPDATE_BLOCK,
+        type: UPDATE_BLOCK,
         block: block,
         row: row,
         column: column
 })
 
 export const changeGrid = (grid:Block[][]) => ({
-    type: gridActionTypes.CHANGE_GRID,
+    type: CHANGE_GRID,
     grid: grid
 })
 
 export const gridReducer: Reducer<GridState> = (state: GridState= {grid: initialGrid}, action:gridAction) => {
     switch(action.type) {
-        case gridActionTypes.UPDATE_BLOCK:
+        case UPDATE_BLOCK:
             let grid:Block[][] = []
             for(let i = 0; i<state.grid.length; i++) {
                 grid[i] = [...state.grid[i]]
@@ -52,8 +50,8 @@ export const gridReducer: Reducer<GridState> = (state: GridState= {grid: initial
             grid[action.row][action.column] = action.block
             return Object.assign({}, state, {grid:grid})
         
-        case gridActionTypes.CHANGE_GRID:
-          return Object.assign({}, state, {grid:action.grid})
+        case CHANGE_GRID:
+          return action.grid ? Object.assign({}, state, {grid:action.grid}) : state
             
         default:
             return state

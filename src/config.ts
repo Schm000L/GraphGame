@@ -1,4 +1,4 @@
-export const ROWS:number = 7
+export const ROWS:number = 9
 export const COLUMNS:number = 13
 export const BLOCKSIZE = 50
 
@@ -36,16 +36,7 @@ export const EDGES: Edge[] = [
 
 type NODE = "NODE"
 type EMPTYBLOCK = "EMPTYBLOCK"
-type LEFTRIGHT = "LEFTRIGHT"
-type UPDOWN = "UPDOWN"
-type LEFTCENTER = "LEFTCENTER"
-type LEFTDOWN = "LEFTDOWN"
-type LEFTUP = "LEFTUP"
-type RIGHTDOWN = "RIGHTDOWN"
-type RIGHTUP = "RIGHTUP"
-type ALLDIRECTIONS = "ALLDIRECTIONS"
-export type Block = NODE|EMPTYBLOCK|LEFTRIGHT|UPDOWN|LEFTCENTER|LEFTDOWN|LEFTUP|RIGHTDOWN|RIGHTUP|ALLDIRECTIONS
+export type Block = NODE|EMPTYBLOCK
 
-// v1.x.x - Flexboxes, "pipes"
-// v2.x.x - Absolute positioning, direct edges utilizing z-values
-// Will likely skip "pipes" implementation
+// vNever.x.x - Flexboxes, "pipes"
+// v1.x.x - Absolute positioning, direct edges utilizing z-values

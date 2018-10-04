@@ -32,8 +32,6 @@ export default class Row extends React.Component<RowProps,{}>{
         for(let i = 0; i<this.props.blocks; i++) {
             this.props.nodePositions.includes(i) ? toRender.push((<Node key={'block'+i+Math.random}/>)) : toRender.push((<EmptyBlock key={'block'+i+Math.random}/>))
         }
-
-        //console.log(toRender)
         return(<BaseRow>
             {toRender}
         </BaseRow>)
