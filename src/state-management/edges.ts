@@ -9,8 +9,8 @@ const intialState: EdgeState = {
 
 export interface EdgeState {
     edges: Edge[],
-    p1Edges:Edge[],
-    p2Edges: Edge[]
+    p1Edges:number[],
+    p2Edges: number[]
 }
 
 const UPDATE_EDGE = "UPDATE_EDGE"
@@ -53,7 +53,6 @@ export const claimEdge = (edge:Edge, player: boolean) => ({
 export const edgeReducer: Reducer<EdgeState> = (state: EdgeState=intialState, action:edgeAction) => {
     switch(action.type) {
         case UPDATE_EDGE:
-        // Kanske måste gå tillbaka till Object.assign
             return Object.assign({}, state, {edge:action.edge})
         
         case CHANGE_EDGES:
@@ -61,7 +60,10 @@ export const edgeReducer: Reducer<EdgeState> = (state: EdgeState=intialState, ac
             
         // TODO: Do check to not allow duplicates and claiming the other player's edges
         case CLAIM_EDGE:
-            return action.player ? Object.assign({}, state, {p1Edges: [...state.p1Edges, action.edge]}) : Object.assign({},state, {p2Edges: [...state.p2Edges, action.edge]})
+            let edgeIndex = state.edges.findIndex((edge:Edge) => edge===action.edge)
+            if( edgeIndex>=0 && !state.p1Edges.includes(edgeIndex) && !state.p2Edges.includes(edgeIndex) ) 
+                    return action.player ? Object.assign({}, state, {p1Edges: [...state.p1Edges, edgeIndex]}) : Object.assign({},state, {p2Edges: [...state.p2Edges, edgeIndex]})
+            return state            
 
         default:
             return state

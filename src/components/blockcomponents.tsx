@@ -55,6 +55,7 @@ export type EdgeProps = {
     left: number,
     width: number,
     rotation: number,
+    colour: [number, number, number],
     zIndex: number
 }
 
@@ -84,7 +85,7 @@ export const EdgeComponent = styled.div`
     height:10px;
     width:${(props:EdgeProps) => props.width}px;
     
-    background-color: rgb(${Math.random()*255} ${Math.random()*255} ${Math.random()*255});
+    background-color: rgb(${(props:EdgeProps)=> `${props.colour[0]} ${props.colour[1]} ${props.colour[2]}`});
 
     transform-origin:0 0 0;
     transform: rotate(${(props:EdgeProps)=>props.rotation}rad);

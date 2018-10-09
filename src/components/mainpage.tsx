@@ -5,15 +5,16 @@ import logo from '../logo.svg';
 import {Block, ROWS, COLUMNS, Edge, Node} from '../config'
 
 import {updateBlock, changeGrid} from '../state-management/grid'
-import {changeEdges} from '../state-management/edges'
+import {changeEdges, EdgeState} from '../state-management/edges'
 import {changeNodes} from '../state-management/nodes'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
 
 /* TODO:
- * Use generation alg to get nodes and edges
+ * Use generation alg to get nodes and edges - DONE
  * Moving some logic from grid.tsx to mainpage
- * Check if edge to be claimed already has been claimed by someone
+ * Check if edge to be claimed already has been claimed by someone - DONE
+ * Should one just waste ones turn when selecting non-valid edge?
  * Represent edges as {[firstNode:number]: {secondNode:number, value: number}} instead of [number, number, number]?
  * Handle edgecolors: 1 or random for unclaimed, 1 for p1, 1 for p2
  * Calculate score
@@ -51,7 +52,8 @@ const Header = () => {
 
 const mapStateToProps = (state: RootState) => {
     return {
-      grid: state.gridReducer.grid
+      grid: state.gridReducer.grid,
+      edgeReducer: state.edgeReducer
     }
   }
 
@@ -73,7 +75,8 @@ interface MainPageProps extends StateProps, DispatchProps {
 }
 
 interface StateProps {
-    grid: Block[][]
+    grid: Block[][],
+    edgeReducer: EdgeState
 } 
 
 interface DispatchProps {
@@ -214,9 +217,17 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         // console.log("Generated edges:", this.edges)
         this.setState({loading: false})
     }
-    
+
+    calculateScore() {
+        let score = 0
+        if(this.props.edgeReducer.p1Edges && this.props.edgeReducer.p1Edges.length > 0 && this.props.edgeReducer.edges && this.props.edgeReducer.edges.length > 0)
+            this.props.edgeReducer.p1Edges.forEach((index:number) => score+= this.props.edgeReducer.edges[index][2] )
+        console.log(score)
+    }
+
     render(){
         if(!this.state.loading)
+            this.calculateScore()
             return(
                 <>
                     <Header/>

@@ -9,6 +9,18 @@ import { RootState } from '../state-management/combiner';
 import Edge from './edge'
 import { edgeParameters } from '../helpers/edgemath';
 
+/*
+    Connected edges
+
+    1. Go through all taken edges and put all "touched" nodes in an array
+    2. Loop through all edges; Any edge not taken that has one or both nodes in the "touched" nodes is a connectedEdge
+
+*/
+const blue:[number, number, number] = [0,0,255] 
+const red: [number, number, number] = [255,0,0]
+const black: [number, number, number] = [0,0,0]
+const grey:[number, number, number] = [90, 90, 90]
+
 const BaseGrid = styled.div`
     position:relative;
     display:flex;
@@ -20,6 +32,10 @@ const BaseGrid = styled.div`
     border:1px solid hotpink;
 `
 
+interface GridState {
+    connectedNodes: number[]
+}
+
 interface GridProps extends StateProps, DispatchProps {
     rows: number
     columns: number
@@ -29,8 +45,8 @@ interface GridProps extends StateProps, DispatchProps {
 interface StateProps {
     grid: Block[][],
     edges: [number, number, number][],
-    p1Edges:[number, number, number][],
-    p2Edges:[number, number, number][],
+    p1Edges:number[],
+    p2Edges:number[],
     reduxNodes: Node[]
 } 
 
@@ -56,19 +72,82 @@ const mapDispatchToProps = (dispatch: any) => {
     }
 }
 
-class Grid extends React.Component<GridProps,{}> {
+class Grid extends React.Component<GridProps,GridState> {
+    constructor(props: GridProps) {
+        super(props)
+        let connNodes:number[] = [0]
+        this.props.p1Edges.forEach( (edgeIndex:number) => {
+            if(!connNodes.includes(this.props.edges[edgeIndex][0]))
+                connNodes.push(this.props.edges[edgeIndex][0])
+            if(!connNodes.includes(this.props.edges[edgeIndex][1]))
+                connNodes.push(this.props.edges[edgeIndex][1])
+        })
+        this.props.p2Edges.forEach( (edgeIndex:number) => {
+            if(!connNodes.includes(this.props.edges[edgeIndex][0]))
+                connNodes.push(this.props.edges[edgeIndex][0])
+            if(!connNodes.includes(this.props.edges[edgeIndex][1]))
+                connNodes.push(this.props.edges[edgeIndex][1])
+        })
+        this.state = {
+            connectedNodes: connNodes
+        }
+    }
+
+    componentDidUpdate(prevProps: GridProps, prevState: GridState) {
+        if(prevProps.p1Edges !== this.props.p1Edges || prevProps.p2Edges !== this.props.p2Edges) {
+            console.log("NEW")
+            this.updateConnectedEdges()
+        }
+
+        if(prevState.connectedNodes !== this.state.connectedNodes){
+            console.log("NEW STATE")
+            console.log("OLD", prevState.connectedNodes)
+            console.log("NEW", this.state.connectedNodes)
+        }
+
+        console.log("------------------------------------------------------")
+    }
+
+    updateConnectedEdges() {
+        let connNodes:number[] = [0]
+        this.props.p1Edges.forEach( (edgeIndex:number) => {
+            if(!connNodes.includes(this.props.edges[edgeIndex][0]))
+                connNodes.push(this.props.edges[edgeIndex][0])
+            if(!connNodes.includes(this.props.edges[edgeIndex][1]))
+                connNodes.push(this.props.edges[edgeIndex][1])
+        })
+        this.props.p2Edges.forEach( (edgeIndex:number) => {
+            if(!connNodes.includes(this.props.edges[edgeIndex][0]))
+                connNodes.push(this.props.edges[edgeIndex][0])
+            if(!connNodes.includes(this.props.edges[edgeIndex][1]))
+                connNodes.push(this.props.edges[edgeIndex][1])
+        })
+        this.setState({connectedNodes: connNodes})
+    }
+
     p1sTurn: boolean = true
 
     edgeClick = (edge:[number, number, number]) => {
         console.log("Clicked on", this.props.reduxNodes[edge[0]], this.props.reduxNodes[edge[1]])
-        this.props.claimEdge(edge, this.p1sTurn)
-        this.p1sTurn = !this.p1sTurn
+        if(this.state.connectedNodes.includes(edge[0]) || this.state.connectedNodes.includes(edge[1])) {
+            this.props.claimEdge(edge, this.p1sTurn)
+            this.p1sTurn = !this.p1sTurn
+        } else {
+            console.log("INVALID EDGE SELECTION")
+        }
     }
 
     renderEdges(){
         return this.props.edges.map((edge:[number, number, number], index:number) => {
             let [top, left, width, rotation] = edgeParameters(this.props.nodes[edge[0]], this.props.nodes[edge[1]])
-            return <Edge top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} dispatch={this.edgeClick} key={"edge" + Math.random + index}/>
+            let clr:[number, number, number] = grey
+            if(this.state.connectedNodes.includes(edge[0]) || this.state.connectedNodes.includes(edge[1]))
+                clr = black
+            if(this.props.p1Edges.includes(index))
+                clr = blue
+            if(this.props.p2Edges.includes(index))
+                clr = red
+            return <Edge top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} colour={clr} dispatch={this.edgeClick} key={"edge" + Math.random + index}/>
         })
     }
 
