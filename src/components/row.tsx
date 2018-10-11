@@ -1,11 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import {Node, EmptyBlock} from './blockcomponents'
+import { Block } from '../config';
 
 interface RowProps{
     id: number
-    blocks: number
-    nodePositions: number[]
+    blocks: Block[]
 }
 
 const BaseRow = styled.div`
@@ -28,12 +28,14 @@ export default class Row extends React.Component<RowProps,{}>{
     }
 
     render(){
-        let toRender: any[] = []
-        for(let i = 0; i<this.props.blocks; i++) {
-            this.props.nodePositions.includes(i) ? toRender.push((<Node key={'block'+i+Math.random}/>)) : toRender.push((<EmptyBlock key={'block'+i+Math.random}/>))
-        }
-        return(<BaseRow>
-            {toRender}
-        </BaseRow>)
+        let toRender = this.props.blocks.map((block: Block, i:number) => {
+            return block === "NODE" ? (<Node key={'block'+i+Math.random}/>) : (<EmptyBlock key={'block'+i+Math.random}/>)
+        })
+        
+        return(
+            <BaseRow>
+                {toRender}
+            </BaseRow>
+        )
     }
 }

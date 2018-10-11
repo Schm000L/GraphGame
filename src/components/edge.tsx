@@ -20,13 +20,3 @@ const Edge = (props: EdgeProps) => {
 
 }
 export default Edge
-
-// export default class Edge extends React.Component<EdgeProps,{}> {
-//     handleClickEvent = (event: React.MouseEvent<HTMLElement>) => {
-//         return this.props.dispatch(this.props.edge)
-//     }
-
-//     render(){
-//         return <EdgeComponent top={this.props.top} left={this.props.left} width={this.props.width} rotation={this.props.rotation} zIndex={this.props.zIndex} onClick={this.handleClickEvent}/>
-//     }
-// }

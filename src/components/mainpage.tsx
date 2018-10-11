@@ -11,12 +11,8 @@ import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
 
 /* TODO:
- * Use generation alg to get nodes and edges - DONE
- * Moving some logic from grid.tsx to mainpage
- * Check if edge to be claimed already has been claimed by someone - DONE
- * Should one just waste ones turn when selecting non-valid edge?
+ * Move some logic from grid.tsx to mainpage
  * Represent edges as {[firstNode:number]: {secondNode:number, value: number}} instead of [number, number, number]?
- * Handle edgecolors: 1 or random for unclaimed, 1 for p1, 1 for p2
  * Calculate score
  * Display score
  * Add end-condition - Clearly display winner
@@ -97,8 +93,6 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
 
     n: number = Math.floor(Math.random() * 8) + 3;
     i: number = 0;
-    p1Edges: number[][] = new Array;
-    p2Edges: number[][] = new Array;
     p1Points: number = 0;
     p2Points: number = 0;
     p1sTurn: boolean = true;
@@ -145,10 +139,6 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         let nodes: Node[]=[[4,0]];
         for(let i = 0; i<=ROWS;i+=this.distance){ // ROWS
             for(let j = 2; j<=COLUMNS; j+=this.distance) { // COLUMNS
-                // if(j===0) {
-                //     if(i===2)
-                //         nodes.push([i,j])
-                // } else 
                 if(Math.random() >= 0.6)
                     nodes.push([i, j])
             }
@@ -172,27 +162,6 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         return edges;
     }
 
-    /*private complete(n:number, nodes:number[], p1Edges:number[][], p2Edges:number[][]): boolean {
-        let returnValue: boolean = true;
-        let takenNodes:  number[] = new Array();
-        let takenEdges: number[][] = p1Edges.concat(p2Edges);
-        //console.log("Taken: " + takenEdges);
-        for(let edge of takenEdges) {
-            takenNodes = this.addTakenNodes(n, edge[0], takenNodes);//borde vara överflödig
-            takenNodes = this.addTakenNodes(n, edge[1], takenNodes);
-        }
-
-        console.log("takenNodes length: " + takenNodes.length);
-        for(n of nodes) {
-            if(takenNodes.indexOf(n) === -1) {
-                //console.log(n + "was still free!");
-                returnValue = false;
-            }
-        }
-        //console.log("Complete returned: " + returnValue);
-        return returnValue;
-    }*/
-
     componentDidMount(){
         let grid:Block[][] = []
         for(let i = 0; i<ROWS; i++) {
@@ -205,23 +174,20 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         this.nodes.forEach((node:Node) => {
             grid[node[0]][node[1]] = "NODE"
         })
-
-        console.log("CHANGE GRID", grid)
-
         //Seems to be a bug where changeGrid gets called twice with grid as undefined the second time
         // FIX THE BUG, partial solution is to add checking to input in the reducer
         this.props.changeGrid(grid)
         this.props.changeEdges(this.edges)
         this.props.changeNodes(this.nodes)
-        // console.log("Generated nodes:", this.nodes)
-        // console.log("Generated edges:", this.edges)
+
         this.setState({loading: false})
     }
 
     calculateScore() {
         let score = 0
-        if(this.props.edgeReducer.p1Edges && this.props.edgeReducer.p1Edges.length > 0 && this.props.edgeReducer.edges && this.props.edgeReducer.edges.length > 0)
-            this.props.edgeReducer.p1Edges.forEach((index:number) => score+= this.props.edgeReducer.edges[index][2] )
+        const {p1Edges, edges} = this.props.edgeReducer
+        if(p1Edges && p1Edges.length > 0 && edges && edges.length > 0)
+            p1Edges.forEach((index:number) => score+= edges[index][2] )
         console.log(score)
     }
 

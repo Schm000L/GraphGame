@@ -75,40 +75,18 @@ const mapDispatchToProps = (dispatch: any) => {
 class Grid extends React.Component<GridProps,GridState> {
     constructor(props: GridProps) {
         super(props)
-        let connNodes:number[] = [0]
-        this.props.p1Edges.forEach( (edgeIndex:number) => {
-            if(!connNodes.includes(this.props.edges[edgeIndex][0]))
-                connNodes.push(this.props.edges[edgeIndex][0])
-            if(!connNodes.includes(this.props.edges[edgeIndex][1]))
-                connNodes.push(this.props.edges[edgeIndex][1])
-        })
-        this.props.p2Edges.forEach( (edgeIndex:number) => {
-            if(!connNodes.includes(this.props.edges[edgeIndex][0]))
-                connNodes.push(this.props.edges[edgeIndex][0])
-            if(!connNodes.includes(this.props.edges[edgeIndex][1]))
-                connNodes.push(this.props.edges[edgeIndex][1])
-        })
         this.state = {
-            connectedNodes: connNodes
+            connectedNodes: this.getConnectedNodes()
         }
     }
 
     componentDidUpdate(prevProps: GridProps, prevState: GridState) {
         if(prevProps.p1Edges !== this.props.p1Edges || prevProps.p2Edges !== this.props.p2Edges) {
-            console.log("NEW")
-            this.updateConnectedEdges()
+            this.setState({connectedNodes: this.getConnectedNodes()})
         }
-
-        if(prevState.connectedNodes !== this.state.connectedNodes){
-            console.log("NEW STATE")
-            console.log("OLD", prevState.connectedNodes)
-            console.log("NEW", this.state.connectedNodes)
-        }
-
-        console.log("------------------------------------------------------")
     }
 
-    updateConnectedEdges() {
+    getConnectedNodes() {
         let connNodes:number[] = [0]
         this.props.p1Edges.forEach( (edgeIndex:number) => {
             if(!connNodes.includes(this.props.edges[edgeIndex][0]))
@@ -122,16 +100,20 @@ class Grid extends React.Component<GridProps,GridState> {
             if(!connNodes.includes(this.props.edges[edgeIndex][1]))
                 connNodes.push(this.props.edges[edgeIndex][1])
         })
-        this.setState({connectedNodes: connNodes})
+        return connNodes
     }
 
     p1sTurn: boolean = true
 
     edgeClick = (edge:[number, number, number]) => {
-        console.log("Clicked on", this.props.reduxNodes[edge[0]], this.props.reduxNodes[edge[1]])
-        if(this.state.connectedNodes.includes(edge[0]) || this.state.connectedNodes.includes(edge[1])) {
-            this.props.claimEdge(edge, this.p1sTurn)
-            this.p1sTurn = !this.p1sTurn
+        if( this.state.connectedNodes.includes(edge[0]) || this.state.connectedNodes.includes(edge[1]) ) {
+            let edgeIndex = this.props.edges.findIndex( (propEdge: [number, number, number]) => propEdge===edge)
+            if(edgeIndex>=0 && !this.props.p1Edges.includes(edgeIndex) && !this.props.p2Edges.includes(edgeIndex)) {
+                this.props.claimEdge(edge, this.p1sTurn)
+                this.p1sTurn = !this.p1sTurn
+            } else {
+                console.log("EDGE ALREADY CLAIMED")
+            }
         } else {
             console.log("INVALID EDGE SELECTION")
         }
@@ -153,22 +135,16 @@ class Grid extends React.Component<GridProps,GridState> {
 
     render(){
         if(this.props.grid) {
-        let toRender: React.ReactElement<Row>[] = []
-        for(let i = 0; i<this.props.grid.length; i++) {
-            let nodesOnRow: number[] = []
-            this.props.grid[i].forEach((block: Block, index: number) => {
-                if(block === "NODE")
-                    nodesOnRow.push(index)
+            let toRender = this.props.grid.map((row: Block[], index: number) => {
+                return <Row id={index} blocks={row} key={"Row"+index}/>
             })
-            toRender.push((<Row blocks={this.props.columns} id={i} nodePositions={nodesOnRow} key={"Row"+i}/>))
-        }
-
-        return(
-            <BaseGrid style={{width: 50*this.props.rows+''}}>
-               {toRender}
-                {this.renderEdges()}
-            </BaseGrid>
-        )
+        
+            return(
+                <BaseGrid style={{width: 50*this.props.rows+''}}>
+                    {toRender}
+                    {this.renderEdges()}
+                </BaseGrid>
+            )
         }
         return(<h1>GRID UNDEFINED</h1>)
     }
