@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import { BLOCKSIZE } from '../config';
 
 const green = '0, 255, 0'
 const blue = '0, 0, 255'
@@ -7,7 +8,7 @@ const blue = '0, 0, 255'
 const white = '255, 255, 255'
 
 export const EmptyBlock = styled.div `
-    width:50px;
+    width:${BLOCKSIZE}px;
     height:inherit;
     background-color: rgb(200, 200, 10);
     margin: 0;
@@ -26,8 +27,8 @@ export const EmptyBlock = styled.div `
 
 const NodeContainer = styled.div `
     position:relative;
-    width:50px;
-    height:50px;
+    width:${BLOCKSIZE}px;
+    height:${BLOCKSIZE}px;
     margin: 0;
     background-color:rgb(200, 200, 10);
     &:nth-child(odd) {
@@ -36,9 +37,9 @@ const NodeContainer = styled.div `
 `
 
 const NODE = styled.div `
-    width:50px;
+    width:${BLOCKSIZE}px;
     height:inherit;
-    border-radius:25px;
+    border-radius:${Math.floor(BLOCKSIZE/2)}px;
     background-color: rgb(${blue});
     margin: 0;
     position:inherit;
@@ -63,7 +64,7 @@ export const Edge = styled.div`
     position: absolute;
     top:${(props:EdgeProps) => props.top}px;
     left:${(props:EdgeProps) => props.left}px;
-    height:10px;
+    height:inherit;
     
     width:${(props:EdgeProps) => props.width}px;
     transform-origin:0 0 0;
@@ -82,7 +83,7 @@ export const EdgeComponent = styled.div`
     top:${(props:EdgeProps) => props.top}px;
     left:${(props:EdgeProps) => props.left}px;
     
-    height:10px;
+    height:${Math.floor(BLOCKSIZE/5)}px;
     width:${(props:EdgeProps) => props.width}px;
     
     background-color: rgb(${(props:EdgeProps)=> `${props.colour[0]} ${props.colour[1]} ${props.colour[2]}`});

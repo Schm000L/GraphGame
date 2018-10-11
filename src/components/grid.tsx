@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import Row from './row'
-import {Block, COLUMNS, Node} from '../config'
+import {Block, COLUMNS, Node, BLOCKSIZE} from '../config'
 import { updateBlock } from '../state-management/grid';
 import { claimEdge} from '../state-management/edges'
 import { connect } from 'react-redux';
@@ -25,7 +25,7 @@ const BaseGrid = styled.div`
     position:relative;
     display:flex;
     flex-direction:column;
-    width:${COLUMNS*50}px;
+    width:${COLUMNS*BLOCKSIZE}px;
     padding:0;
     margin:auto;
     text-align:center;
@@ -83,8 +83,26 @@ class Grid extends React.Component<GridProps,GridState> {
     componentDidUpdate(prevProps: GridProps, prevState: GridState) {
         if(prevProps.p1Edges !== this.props.p1Edges || prevProps.p2Edges !== this.props.p2Edges) {
             this.setState({connectedNodes: this.getConnectedNodes()})
+            this.calculateScore()
         }
     }
+
+    //Is called before click, thus !this.p1sTurn
+    calculateScore() {
+        let score = 0
+        const p1Edges = this.props.p1Edges
+        const p2Edges = this.props.p2Edges
+        const edges = this.props.edges
+        if(!this.p1sTurn) {
+            if(p1Edges && p1Edges.length > 0 && edges && edges.length > 0)
+                p1Edges.forEach((index:number) => score+= edges[index][2] )
+        } else {
+            if(p2Edges && p2Edges.length > 0 && edges && edges.length > 0)
+                p2Edges.forEach((index:number) => score+= edges[index][2] )
+        }
+        console.log(!this.p1sTurn ? "P1 score:":"P2 score:", score)
+    }
+
 
     getConnectedNodes() {
         let connNodes:number[] = [0]
@@ -106,16 +124,20 @@ class Grid extends React.Component<GridProps,GridState> {
     p1sTurn: boolean = true
 
     edgeClick = (edge:[number, number, number]) => {
-        if( this.state.connectedNodes.includes(edge[0]) || this.state.connectedNodes.includes(edge[1]) ) {
-            let edgeIndex = this.props.edges.findIndex( (propEdge: [number, number, number]) => propEdge===edge)
-            if(edgeIndex>=0 && !this.props.p1Edges.includes(edgeIndex) && !this.props.p2Edges.includes(edgeIndex)) {
-                this.props.claimEdge(edge, this.p1sTurn)
-                this.p1sTurn = !this.p1sTurn
-            } else {
-                console.log("EDGE ALREADY CLAIMED")
-            }
+        if(this.props.nodes.length === this.getConnectedNodes().length) {
+            console.log("ALL NODES REACHED - GAME IS DONE!!!!")
         } else {
-            console.log("INVALID EDGE SELECTION")
+            if( this.state.connectedNodes.includes(edge[0]) || this.state.connectedNodes.includes(edge[1]) ) {
+                let edgeIndex = this.props.edges.findIndex( (propEdge: [number, number, number]) => propEdge===edge)
+                if(edgeIndex>=0 && !this.props.p1Edges.includes(edgeIndex) && !this.props.p2Edges.includes(edgeIndex)) {
+                    this.props.claimEdge(edge, this.p1sTurn)
+                    this.p1sTurn = !this.p1sTurn
+                } else {
+                    console.log("EDGE ALREADY CLAIMED")
+                }
+            } else {
+                console.log("INVALID EDGE SELECTION")
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 export const ROWS:number = 9
 export const COLUMNS:number = 13
-export const BLOCKSIZE = 50
+export const BLOCKSIZE = 60
 
 export type Node = [number, number]
 export const NODES: Node[] = [

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import {Node, EmptyBlock} from './blockcomponents'
-import { Block } from '../config';
+import { Block, BLOCKSIZE } from '../config';
 
 interface RowProps{
     id: number
@@ -12,7 +12,7 @@ const BaseRow = styled.div`
     display:flex;
     flex-direction:row;
     width:100%;
-    height:50px;
+    height:${BLOCKSIZE}px;
     padding:0;
     margin:0;
     &:nth-child(1) {
@@ -31,7 +31,7 @@ export default class Row extends React.Component<RowProps,{}>{
         let toRender = this.props.blocks.map((block: Block, i:number) => {
             return block === "NODE" ? (<Node key={'block'+i+Math.random}/>) : (<EmptyBlock key={'block'+i+Math.random}/>)
         })
-        
+
         return(
             <BaseRow>
                 {toRender}

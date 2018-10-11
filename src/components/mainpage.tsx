@@ -83,29 +83,19 @@ interface DispatchProps {
 }
 
 class MainPage extends React.Component<MainPageProps, MainPageState> {
+
+    p1sTurn: boolean = true;
+    distance = 2
+    nodes = this.createNodes3();
+    edges = this.populateTree(this.nodes);
+
     constructor(props: MainPageProps){
         super(props)
         this.state = {
             loading: true
         }
     }
-
-
-    n: number = Math.floor(Math.random() * 8) + 3;
-    i: number = 0;
-    p1Points: number = 0;
-    p2Points: number = 0;
-    p1sTurn: boolean = true;
-
-
-    distance = 2
-    nodes = this.createNodes3();
-    edges = this.populateTree(this.nodes);
-
-    // NODE-gen idea: Loop through each COLUMN, 
-    // randomize number of nodes for that column 
-    // except for the first in which only one centrally positioned nodes is created
-
+ 
     createNodes2():Node[] {
         let nodes:Node[] = [[4,0]]
         for(let j = 2; j<=COLUMNS; j+=this.distance) { // COLUMNS
@@ -182,18 +172,9 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
 
         this.setState({loading: false})
     }
-
-    calculateScore() {
-        let score = 0
-        const {p1Edges, edges} = this.props.edgeReducer
-        if(p1Edges && p1Edges.length > 0 && edges && edges.length > 0)
-            p1Edges.forEach((index:number) => score+= edges[index][2] )
-        console.log(score)
-    }
-
+    
     render(){
         if(!this.state.loading)
-            this.calculateScore()
             return(
                 <>
                     <Header/>
