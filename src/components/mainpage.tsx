@@ -144,7 +144,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         for(let i=0; i<n; i++) {
             for(let j=0; j<n; j++) {
                 if(i<j && (nodes[j][1]-nodes[i][1]===this.distance||nodes[j][1]===nodes[i][1])) {
-                    let edge: Edge = [i, j, Math.floor(Math.random()*6)+1];
+                    let edge: Edge = {firstNode: i, secondNode: j, points: Math.floor(Math.random()*6)+1};
                     edges.push(edge);
                 }
             }

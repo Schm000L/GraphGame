@@ -1,12 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import Row from './row'
-import {Block, COLUMNS, Node, BLOCKSIZE} from '../config'
+import {Block, COLUMNS, Node, Edge, BLOCKSIZE} from '../config'
 import { updateBlock } from '../state-management/grid';
 import { claimEdge} from '../state-management/edges'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
-import Edge from './edge'
+import EdgeComponent from './edge'
 import { edgeParameters } from '../helpers/edgemath';
 
 /*
@@ -44,7 +44,7 @@ interface GridProps extends StateProps, DispatchProps {
 
 interface StateProps {
     grid: Block[][],
-    edges: [number, number, number][],
+    edges: Edge[],
     p1Edges:number[],
     p2Edges:number[],
     reduxNodes: Node[]
@@ -68,7 +68,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: any) => {
     return {
       updateBlock: (block: Block, row: number, column: number) => dispatch(updateBlock(block, row, column)),
-      claimEdge: (edge: [number, number, number], player: boolean) => dispatch(claimEdge(edge, player))
+      claimEdge: (edge: Edge, player: boolean) => dispatch(claimEdge(edge, player))
     }
 }
 
@@ -95,10 +95,10 @@ class Grid extends React.Component<GridProps,GridState> {
         const edges = this.props.edges
         if(!this.p1sTurn) {
             if(p1Edges && p1Edges.length > 0 && edges && edges.length > 0)
-                p1Edges.forEach((index:number) => score+= edges[index][2] )
+                p1Edges.forEach((index:number) => score+= edges[index].points )
         } else {
             if(p2Edges && p2Edges.length > 0 && edges && edges.length > 0)
-                p2Edges.forEach((index:number) => score+= edges[index][2] )
+                p2Edges.forEach((index:number) => score+= edges[index].points )
         }
         console.log(!this.p1sTurn ? "P1 score:":"P2 score:", score)
     }
@@ -107,28 +107,28 @@ class Grid extends React.Component<GridProps,GridState> {
     getConnectedNodes() {
         let connNodes:number[] = [0]
         this.props.p1Edges.forEach( (edgeIndex:number) => {
-            if(!connNodes.includes(this.props.edges[edgeIndex][0]))
-                connNodes.push(this.props.edges[edgeIndex][0])
-            if(!connNodes.includes(this.props.edges[edgeIndex][1]))
-                connNodes.push(this.props.edges[edgeIndex][1])
+            if(!connNodes.includes(this.props.edges[edgeIndex].firstNode))
+                connNodes.push(this.props.edges[edgeIndex].firstNode)
+            if(!connNodes.includes(this.props.edges[edgeIndex].secondNode))
+                connNodes.push(this.props.edges[edgeIndex].secondNode)
         })
         this.props.p2Edges.forEach( (edgeIndex:number) => {
-            if(!connNodes.includes(this.props.edges[edgeIndex][0]))
-                connNodes.push(this.props.edges[edgeIndex][0])
-            if(!connNodes.includes(this.props.edges[edgeIndex][1]))
-                connNodes.push(this.props.edges[edgeIndex][1])
+            if(!connNodes.includes(this.props.edges[edgeIndex].firstNode))
+                connNodes.push(this.props.edges[edgeIndex].firstNode)
+            if(!connNodes.includes(this.props.edges[edgeIndex].secondNode))
+                connNodes.push(this.props.edges[edgeIndex].secondNode)
         })
         return connNodes
     }
 
     p1sTurn: boolean = true
 
-    edgeClick = (edge:[number, number, number]) => {
+    edgeClick = (edge:Edge) => {
         if(this.props.nodes.length === this.getConnectedNodes().length) {
             console.log("ALL NODES REACHED - GAME IS DONE!!!!")
         } else {
-            if( this.state.connectedNodes.includes(edge[0]) || this.state.connectedNodes.includes(edge[1]) ) {
-                let edgeIndex = this.props.edges.findIndex( (propEdge: [number, number, number]) => propEdge===edge)
+            if( this.state.connectedNodes.includes(edge.firstNode) || this.state.connectedNodes.includes(edge.secondNode) ) {
+                let edgeIndex = this.props.edges.findIndex( (propEdge: Edge) => propEdge===edge)
                 if(edgeIndex>=0 && !this.props.p1Edges.includes(edgeIndex) && !this.props.p2Edges.includes(edgeIndex)) {
                     this.props.claimEdge(edge, this.p1sTurn)
                     this.p1sTurn = !this.p1sTurn
@@ -142,16 +142,16 @@ class Grid extends React.Component<GridProps,GridState> {
     }
 
     renderEdges(){
-        return this.props.edges.map((edge:[number, number, number], index:number) => {
-            let [top, left, width, rotation] = edgeParameters(this.props.nodes[edge[0]], this.props.nodes[edge[1]])
+        return this.props.edges.map((edge:Edge, index:number) => {
+            let [top, left, width, rotation] = edgeParameters(this.props.nodes[edge.firstNode], this.props.nodes[edge.secondNode])
             let clr:[number, number, number] = grey
-            if(this.state.connectedNodes.includes(edge[0]) || this.state.connectedNodes.includes(edge[1]))
+            if(this.state.connectedNodes.includes(edge.firstNode) || this.state.connectedNodes.includes(edge.secondNode))
                 clr = black
             if(this.props.p1Edges.includes(index))
                 clr = blue
             if(this.props.p2Edges.includes(index))
                 clr = red
-            return <Edge top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} colour={clr} dispatch={this.edgeClick} key={"edge" + Math.random + index}/>
+            return <EdgeComponent top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} colour={clr} dispatch={this.edgeClick} key={"edge" + Math.random + index}/>
         })
     }
 

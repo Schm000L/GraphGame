@@ -1,13 +1,16 @@
 import {Action, Reducer} from 'redux'
-import {Block, ROWS, COLUMNS, NODE_POSITIONS } from '../config';
+import {Block, ROWS} from '../config';
 
 let initialGrid:Block[][] = []
-for(let i = 0; i<ROWS; i++) {
-    initialGrid[i] = []
-    for(let j=0; j<COLUMNS;j++) {
-        NODE_POSITIONS[i] && NODE_POSITIONS[i].includes(j) ? initialGrid[i][j] = "NODE" : initialGrid[i][j] = "EMPTYBLOCK"
-    }
-}
+for(let i = 0; i<ROWS; i++)
+        initialGrid[i] = []
+        
+// for(let i = 0; i<ROWS; i++) {
+//     initialGrid[i] = []
+//     for(let j=0; j<COLUMNS;j++) {
+//         NODE_POSITIONS[i] && NODE_POSITIONS[i].includes(j) ? initialGrid[i][j] = "NODE" : initialGrid[i][j] = "EMPTYBLOCK"
+//     }
+// }
 
 export interface GridState {
     grid:Block[][]

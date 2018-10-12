@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { EdgeComponent } from './blockcomponents'
+import { EdgeElement} from './blockcomponents'
+import { Edge } from '../config';
 
 interface EdgeProps {
     top: number,
@@ -7,16 +8,16 @@ interface EdgeProps {
     width: number,
     rotation: number,
     zIndex: number,
-    dispatch: (edge:[number, number, number]) => void,
+    dispatch: (edge:Edge) => void,
     colour: [number, number, number]
-    edge: [number, number, number]
+    edge: Edge
 }
 
-const Edge = (props: EdgeProps) => {
+const EdgeComponent = (props: EdgeProps) => {
     const handleClickEvent = (event: React.MouseEvent<HTMLElement>) => { 
         return props.dispatch(props.edge)
     }
-    return <EdgeComponent top={props.top} left={props.left} width={props.width} rotation={props.rotation} zIndex={props.zIndex} colour={props.colour} onClick={handleClickEvent}/>
+    return <EdgeElement top={props.top} left={props.left} width={props.width} rotation={props.rotation} zIndex={props.zIndex} colour={props.colour} onClick={handleClickEvent}/>
 
 }
-export default Edge
+export default EdgeComponent

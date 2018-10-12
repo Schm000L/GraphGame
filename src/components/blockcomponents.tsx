@@ -78,7 +78,7 @@ export const Edge = styled.div`
     }
 ` 
 
-export const EdgeComponent = styled.div`
+export const EdgeElement = styled.div`
     position: absolute;
     top:${(props:EdgeProps) => props.top}px;
     left:${(props:EdgeProps) => props.left}px;
