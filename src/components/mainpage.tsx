@@ -172,7 +172,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
 
         this.setState({loading: false})
     }
-    
+  
     render(){
         if(!this.state.loading)
             return(

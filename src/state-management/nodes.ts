@@ -25,7 +25,6 @@ export const changeNodes = (nodes: Node[]) => ({
 export const nodeReducer: Reducer<NodeState> = (state: NodeState=intialState, action:nodeAction) => {
     switch(action.type) {
         case CHANGE_NODES:
-            console.log("NODE REDUCER CHANGE_NODES")
           return Object.assign({}, state, {nodes: action.nodes})
             
         default:

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { BLOCKSIZE } from '../config';
+import { BLOCKSIZE, Block } from '../config';
 
 const green = '0, 255, 0'
 const blue = '0, 0, 255'
@@ -49,6 +49,29 @@ const NODE = styled.div `
     }
 `
 export const Node = () => <NodeContainer><NODE/></NodeContainer>
+
+
+interface RowProps{
+    blocks: Block[]
+}
+
+const BaseRow = styled.div`
+    display:flex;
+    flex-direction:row;
+    width:100%;
+    height:${BLOCKSIZE}px;
+    padding:0;
+    margin:0;
+    &:nth-child(1) {
+        margin-top:0;
+    }
+`
+
+export const Row = (props: RowProps) => <BaseRow>
+    { props.blocks.map( (block:Block, i:number) => block === "NODE" ? 
+        <Node key={'block'+i+Math.random}/> : <EmptyBlock key={'block'+i+Math.random}/>
+    )}
+</BaseRow>
 
 
 export type EdgeProps = {

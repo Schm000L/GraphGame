@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { EdgeElement} from './blockcomponents'
+import { EdgeElement} from './gridcomponents'
 import { Edge } from '../config';
 
 interface EdgeProps {

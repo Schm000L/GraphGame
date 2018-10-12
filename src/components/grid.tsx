@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import Row from './row'
+import {Row} from './gridcomponents'
 import {Block, COLUMNS, Node, Edge, BLOCKSIZE} from '../config'
 import { updateBlock } from '../state-management/grid';
 import { claimEdge} from '../state-management/edges'
@@ -9,13 +9,6 @@ import { RootState } from '../state-management/combiner';
 import EdgeComponent from './edge'
 import { edgeParameters } from '../helpers/edgemath';
 
-/*
-    Connected edges
-
-    1. Go through all taken edges and put all "touched" nodes in an array
-    2. Loop through all edges; Any edge not taken that has one or both nodes in the "touched" nodes is a connectedEdge
-
-*/
 const blue:[number, number, number] = [0,0,255] 
 const red: [number, number, number] = [255,0,0]
 const black: [number, number, number] = [0,0,0]
@@ -158,7 +151,7 @@ class Grid extends React.Component<GridProps,GridState> {
     render(){
         if(this.props.grid) {
             let toRender = this.props.grid.map((row: Block[], index: number) => {
-                return <Row id={index} blocks={row} key={"Row"+index}/>
+                return <Row blocks={row} key={"Row"+index}/>
             })
         
             return(
