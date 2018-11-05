@@ -1,5 +1,5 @@
 import {Action, Reducer} from 'redux'
-import {Edge, Node} from '../config';
+import {Edge, Node} from '../helpers/customtypes';
 
 const intialState: EdgeState = {
     edges: [],

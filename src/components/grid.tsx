@@ -1,12 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import {Row} from './gridcomponents'
-import {Block, COLUMNS, Node, Edge, BLOCKSIZE} from '../config'
+import {Row, EdgeComponent} from './gridcomponents'
+import {COLUMNS,  BLOCKSIZE} from '../config'
+import {Block, Node, Edge} from '../helpers/customtypes'
 import { updateBlock } from '../state-management/grid';
 import { claimEdge} from '../state-management/edges'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
-import EdgeComponent from './edge'
 import { edgeParameters } from '../helpers/edgemath';
 
 const blue:[number, number, number] = [0,0,255] 
@@ -66,6 +66,8 @@ const mapDispatchToProps = (dispatch: any) => {
 }
 
 class Grid extends React.Component<GridProps,GridState> {
+    p1sTurn: boolean = true
+    
     constructor(props: GridProps) {
         super(props)
         this.state = {
@@ -80,13 +82,13 @@ class Grid extends React.Component<GridProps,GridState> {
         }
     }
 
-    //Is called before click, thus !this.p1sTurn
+    
     calculateScore() {
         let score = 0
         const p1Edges = this.props.p1Edges
         const p2Edges = this.props.p2Edges
         const edges = this.props.edges
-        if(!this.p1sTurn) {
+        if(!this.p1sTurn) { //!this.p1sTurn since it's called before click
             if(p1Edges && p1Edges.length > 0 && edges && edges.length > 0)
                 p1Edges.forEach((index:number) => score+= edges[index].points )
         } else {
@@ -114,7 +116,6 @@ class Grid extends React.Component<GridProps,GridState> {
         return connNodes
     }
 
-    p1sTurn: boolean = true
 
     edgeClick = (edge:Edge) => {
         if(this.props.nodes.length === this.getConnectedNodes().length) {
@@ -144,6 +145,16 @@ class Grid extends React.Component<GridProps,GridState> {
                 clr = blue
             if(this.props.p2Edges.includes(index))
                 clr = red
+
+            // if(index === 0) {
+            //     console.log("------------------------------")
+            //     console.log("Point Disp:", "Between", this.props.nodes[edge.firstNode], "and", this.props.nodes[edge.secondNode])
+            //     console.log("Top:", top)
+            //     console.log("Top offset:", width*Math.sin(rotation))
+            //     console.log("Left:", left)
+            //     console.log("Left offset:", width*Math.cos(rotation))
+            //     console.log("------------------------------")
+            // }
             return <EdgeComponent top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} colour={clr} dispatch={this.edgeClick} key={"edge" + Math.random + index}/>
         })
     }
@@ -151,7 +162,7 @@ class Grid extends React.Component<GridProps,GridState> {
     render(){
         if(this.props.grid) {
             let toRender = this.props.grid.map((row: Block[], index: number) => {
-                return <Row blocks={row} key={"Row"+index}/>
+                return <Row blocks={row} rowIndex={index} key={"Row"+index}/>
             })
         
             return(

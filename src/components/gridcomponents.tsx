@@ -1,11 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { BLOCKSIZE, Block } from '../config';
-
-const green = '0, 255, 0'
-const blue = '0, 0, 255'
-// const red = '255, 0, 0'
-const white = '255, 255, 255'
+import { BLOCKSIZE } from '../config';
+import {Block, Edge} from '../helpers/customtypes'
 
 export const EmptyBlock = styled.div `
     width:${BLOCKSIZE}px;
@@ -15,12 +11,12 @@ export const EmptyBlock = styled.div `
     &:nth-child(odd) {
         background-color:rgb(10, 200, 10);
         &:hover {
-            background-color:rgba(${green}, 100);
+            background-color:green;
         }
     }
     &:nth-child(even) {
         &:hover{
-            background-color:rgba(${blue}, 100);
+            background-color:blue;
         }
     }
 `
@@ -40,19 +36,20 @@ const NODE = styled.div `
     width:${BLOCKSIZE}px;
     height:inherit;
     border-radius:${Math.floor(BLOCKSIZE/2)}px;
-    background-color: rgb(${blue});
+    background-color: blue;
     margin: 0;
     position:inherit;
     z-index:100;
     &:hover {
-        background-color:rgb(${white});
+        background-color:white;
     }
 `
 export const Node = () => <NodeContainer><NODE/></NodeContainer>
 
 
 interface RowProps{
-    blocks: Block[]
+    blocks: Block[],
+    rowIndex: number
 }
 
 const BaseRow = styled.div`
@@ -69,12 +66,12 @@ const BaseRow = styled.div`
 
 export const Row = (props: RowProps) => <BaseRow>
     { props.blocks.map( (block:Block, i:number) => block === "NODE" ? 
-        <Node key={'block'+i+Math.random}/> : <EmptyBlock key={'block'+i+Math.random}/>
+        <Node key={'block'+props.rowIndex+i+Math.random}/> : <EmptyBlock key={'block'+props.rowIndex+i+Math.random}/>
     )}
 </BaseRow>
 
 
-export type EdgeProps = {
+export type ElementProps = {
     top: number,
     left: number,
     width: number,
@@ -83,40 +80,75 @@ export type EdgeProps = {
     zIndex: number
 }
 
-export const Edge = styled.div`
-    position: absolute;
-    top:${(props:EdgeProps) => props.top}px;
-    left:${(props:EdgeProps) => props.left}px;
-    height:inherit;
-    
-    width:${(props:EdgeProps) => props.width}px;
-    transform-origin:0 0 0;
-    transform: rotate(${(props:EdgeProps)=>props.rotation}rad);
-    z-index:${(props:EdgeProps) => props.zIndex};
-    z-index:1;
-    &:hover {
-        border:2px solid white;
-        height:6px;
-        width:${(props:EdgeProps) => props.width-4}px;
-    }
-` 
 
 export const EdgeElement = styled.div`
     position: absolute;
-    top:${(props:EdgeProps) => props.top}px;
-    left:${(props:EdgeProps) => props.left}px;
+    top:${(props:ElementProps) => props.top}px;
+    left:${(props:ElementProps) => props.left}px;
     
     height:${Math.floor(BLOCKSIZE/5)}px;
-    width:${(props:EdgeProps) => props.width}px;
+    width:${(props:ElementProps) => props.width}px;
     
-    background-color: rgb(${(props:EdgeProps)=> `${props.colour[0]} ${props.colour[1]} ${props.colour[2]}`});
+    background-color: rgb(${(props:ElementProps)=> `${props.colour[0]} ${props.colour[1]} ${props.colour[2]}`});
 
     transform-origin:0 0 0;
-    transform: rotate(${(props:EdgeProps)=>props.rotation}rad);
-    z-index:${(props:EdgeProps) => props.zIndex};
+    transform: rotate(${(props:ElementProps)=>props.rotation}rad);
+    z-index:${(props:ElementProps) => props.zIndex};
     &:hover {
         border:2px solid white;
         height:6px;
-        width:${(props:EdgeProps) => props.width-4}px;
+        width:${(props:ElementProps) => props.width-4}px;
     }
 ` 
+
+interface EdgeProps {
+    top: number,
+    left: number,
+    width: number,
+    rotation: number,
+    zIndex: number,
+    dispatch: (edge:Edge) => void,
+    colour: [number, number, number]
+    edge: Edge
+}
+
+export const EdgeComponent = (props: EdgeProps) => {
+    const handleClickEvent = (event: React.MouseEvent<HTMLElement>) => { 
+        return props.dispatch(props.edge)
+    }
+    return <EdgeElement top={props.top} left={props.left} width={props.width} rotation={props.rotation} zIndex={props.zIndex} colour={props.colour} onClick={handleClickEvent}>
+        <EdgePoints top={props.top} left={props.left} width={props.width} rotation={props.rotation} zIndex={props.zIndex} points={props.edge.points}>
+        {`${props.edge.points}`}
+        </EdgePoints>
+        </EdgeElement>
+}
+
+interface PointProps {
+    top: number,
+    left: number,
+    width:number,
+    zIndex: number,
+    rotation: number,
+    points: number
+}
+
+export const EdgePoints = styled.p`
+    position: absolute;
+    // width:50px;
+    // height:30px;
+    
+    top:${(props:PointProps) => Math.abs(Math.cos(props.rotation))}px;
+    left:${(props:PointProps) => 0.5*props.width-20/2}px;
+    // z-index:${(props:PointProps) => 10000};
+    z-index: 200;
+    // background-color:pink;
+
+    transform-origin:0 0 0;
+    transform: rotate(${(props:PointProps)=>-props.rotation}rad);
+    visibility:hidden;
+    ${EdgeElement}:hover & {
+        visibility:visible;
+    }
+`
+// top:${(props:PointProps) => props.top+0.5*props.width*Math.sin(props.rotation)}px;
+// left:${(props:PointProps) => props.left+0.5*props.width*Math.cos(props.rotation)}px;

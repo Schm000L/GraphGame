@@ -2,7 +2,9 @@ import * as React from 'react'
 import styled from 'styled-components'
 import Grid from './grid';
 import logo from '../logo.svg';
-import {Block, ROWS, COLUMNS, Edge, Node} from '../config'
+import {ROWS, COLUMNS} from '../config'
+import {Block, Edge, Node} from '../helpers/customtypes'
+
 
 import {updateBlock, changeGrid} from '../state-management/grid'
 import {changeEdges, EdgeState} from '../state-management/edges'
@@ -12,13 +14,17 @@ import { RootState } from '../state-management/combiner';
 
 /* TODO:
  * Move some logic from grid.tsx to mainpage
- * Represent edges as {[firstNode:number]: {secondNode:number, value: number}} instead of [number, number, number]?
- * Calculate score
+ * Calculate score - DONE
  * Display score
- * Add end-condition - Clearly display winner
+ * Add end-condition - DONE
+ * Clearly display winner
  * Add reset/newgame via button
  * Put the nodes above the edges or hide/remove the edge part that overlaps a node
  */
+
+const ResetButton = styled.button`
+    background-color:red;
+`
 
 const HeadBanner = styled.header `
     background-color: #222;
@@ -178,6 +184,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
             return(
                 <>
                     <Header/>
+                    <ResetButton>NEXT GRAPH</ResetButton>
                     <Grid rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
                 </>
             )

@@ -1,5 +1,5 @@
 import {Action, Reducer} from 'redux'
-import {Node} from '../config';
+import {Node} from '../helpers/customtypes';
 
 const intialState: NodeState = {
     nodes: [[4,0]]
