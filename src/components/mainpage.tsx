@@ -14,7 +14,6 @@ import { RootState } from '../state-management/combiner';
 
 /* TODO:
  * Move some logic from grid.tsx to mainpage
- * Calculate score - DONE
  * Display score
  * Add end-condition - DONE
  * Clearly display winner

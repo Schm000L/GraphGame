@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import {Row, EdgeComponent} from './gridcomponents'
+import {Row, EdgeComponent, /*EdgePoints*/} from './gridcomponents'
 import {COLUMNS,  BLOCKSIZE} from '../config'
 import {Block, Node, Edge} from '../helpers/customtypes'
 import { updateBlock } from '../state-management/grid';
@@ -135,8 +135,9 @@ class Grid extends React.Component<GridProps,GridState> {
         }
     }
 
+    // IDÉ: Skapa edgecontainer, state på hover.
     renderEdges(){
-        return this.props.edges.map((edge:Edge, index:number) => {
+        let toRet = this.props.edges.map((edge:Edge, index:number) => {
             let [top, left, width, rotation] = edgeParameters(this.props.nodes[edge.firstNode], this.props.nodes[edge.secondNode])
             let clr:[number, number, number] = grey
             if(this.state.connectedNodes.includes(edge.firstNode) || this.state.connectedNodes.includes(edge.secondNode))
@@ -157,6 +158,8 @@ class Grid extends React.Component<GridProps,GridState> {
             // }
             return <EdgeComponent top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} colour={clr} dispatch={this.edgeClick} key={"edge" + Math.random + index}/>
         })
+        // toRet.push(<EdgePoints key="fsdgvbcjknubvkhjbhjhbjhjbjkhb"><p>HEJJEJ</p></EdgePoints>)
+        return toRet
     }
 
     render(){
@@ -166,10 +169,12 @@ class Grid extends React.Component<GridProps,GridState> {
             })
         
             return(
+                <>
                 <BaseGrid style={{width: 50*this.props.rows+''}}>
                     {toRender}
                     {this.renderEdges()}
                 </BaseGrid>
+                </>
             )
         }
         return(<h1>GRID UNDEFINED</h1>)
