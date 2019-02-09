@@ -93,6 +93,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
     distance = 2
     nodes = this.createNodes3();
     edges = this.populateTree(this.nodes);
+    resetStyle = {}
 
     constructor(props: MainPageProps){
         super(props)
@@ -177,13 +178,40 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
 
         this.setState({loading: false})
     }
+
+    // TODO: Reset selected edges variables.
+    // Create variables such that there are
+    // variables for points during this game
+    // and total points
+    resetGrid = () => {
+        this.setState({loading: true})
+        
+        this.nodes = this.createNodes3();
+        this.edges = this.populateTree(this.nodes);
+        let grid:Block[][] = []
+        for(let i = 0; i<ROWS; i++) {
+            grid[i] = []
+            for(let j=0; j<COLUMNS;j++) {
+                grid[i][j] = "EMPTYBLOCK"
+            }
+        }
+
+        this.nodes.forEach((node:Node) => {
+            grid[node[0]][node[1]] = "NODE"
+        })
+        this.props.changeGrid(grid)
+        this.props.changeEdges(this.edges)
+        this.props.changeNodes(this.nodes)
+
+        this.setState({loading: false})
+    }
   
     render(){
         if(!this.state.loading)
             return(
                 <>
                     <Header/>
-                    <ResetButton>NEXT GRAPH</ResetButton>
+                    <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
                     <Grid rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
                 </>
             )
