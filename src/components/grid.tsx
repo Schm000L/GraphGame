@@ -20,7 +20,7 @@ const BaseGrid = styled.div`
     flex-direction:column;
     width:${COLUMNS*BLOCKSIZE}px;
     padding:0;
-    margin:auto;
+    margin:0 auto;
     text-align:center;
     border:1px solid hotpink;
 `

@@ -23,11 +23,12 @@ import { RootState } from '../state-management/combiner';
 
 const ResetButton = styled.button`
     background-color:red;
+    float:right;
 `
 
 const HeadBanner = styled.header `
     background-color: #222;
-    width:100 %;
+    width: 100%;
     height: 90px;
     margin-bottom:10px;
     color: white;
@@ -39,14 +40,65 @@ const Logo = styled.img`
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
       }
-      position:absolute;
-      top:5px;
+    position:absolute;
+    top:5px;
+`
+const ScoreBox = styled.div`
+    margin: 0 auto;
+    height: inherit;
+    width: 400px;
+    background:red;
+    display:flex;
+    flex-direction:row;
+`
+const P1Score = styled.div`
+    display:flex;
+    box-sizing:border-box;
+    height:inherit;
+    width: 200px;
+    border-right:5px solid black;
+    background:blue;
+    justify-content:center;
+    align-items:center;
 `
 
-const Header = () => {
+const P2Score = styled.div`
+    display:flex;
+    box-sizing:border-box;
+    height:inherit;
+    width: 200px;
+    border-left: 5px solid black; 
+    background:green;
+    justify-content: center;
+    align-items:center;
+`
+const FeedbackBox = styled.div`
+    box-sizing:border-box;
+    margin:0 auto;
+    width:400px;
+    height:25px;
+    background:hotpink;
+    margin-bottom:10px;
+`
+
+// const ErrorBox = styled.div`
+//     box-sizing:border-box;
+//     margin:0 auto;
+//     width:400px;
+//     height:25px;
+//     background:hotpink;
+//     margin-bottom:10px;
+// `
+
+
+const Header = (props: {p1score: number, p2score:number} ) => {
     return (
         <HeadBanner>
             <Logo src={logo} alt="logo" />
+            <ScoreBox>
+                <P1Score> {props.p1score >= 0 ? props.p1score : '-'} </P1Score>
+                <P2Score> {props.p2score >= 0 ? props.p2score : '-'} </P2Score>
+            </ScoreBox>
         </HeadBanner>
     )
 }
@@ -68,7 +120,9 @@ const mapDispatchToProps = (dispatch: any) => {
 }
 
 interface MainPageState {
-    loading: boolean
+    loading: boolean,
+    p1Score: number,
+    p2Score: number
 }
 
 interface MainPageProps extends StateProps, DispatchProps {
@@ -98,7 +152,9 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
     constructor(props: MainPageProps){
         super(props)
         this.state = {
-            loading: true
+            loading: true,
+            p1Score: 0,
+            p2Score: 0
         }
     }
  
@@ -210,14 +266,15 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         if(!this.state.loading)
             return(
                 <>
-                    <Header/>
-                    <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
+                    <Header p1score={0} p2score={-1} />
+                    <FeedbackBox></FeedbackBox>
                     <Grid rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
+                    <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
                 </>
             )
         return(
             <>
-                <Header/>
+                <Header p1score={0} p2score={0}/>
                 <p>We loading</p>
             </>
         )
