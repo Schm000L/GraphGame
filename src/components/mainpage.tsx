@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import Grid from './grid';
 import EdgeScore from './edgescore'
+import RoundScore from './roundscore'
 import logo from '../logo.svg';
 import { ROWS, COLUMNS } from '../config'
 import { Block, Edge, Node } from '../helpers/customtypes'
@@ -16,10 +17,8 @@ import { RootState } from '../state-management/combiner';
 /* TODO:
  * Move some logic from grid.tsx to mainpage
  * Display score
- * Add end-condition - DONE
  * Clearly display winner
  * Add reset/newgame via button
- * Put the nodes above the edges or hide/remove the edge part that overlaps a node
  */
 
 const ResetButton = styled.button`
@@ -73,22 +72,19 @@ const P2GameScore = styled.div`
     justify-content: center;
     align-items:center;
 `
-const RoundScore = styled.div`
-    height: 40px;
-    width: 80px;
-    background:red;
-    display:flex;
-    flex-direction:row;
+
+const ErrBox = styled.div`
+    box-sizing:border-box;
+    margin:0 auto;
+    width:400px;
+    height:25px;
+    background:hotpink;
+    margin-bottom:10px;
+    visibility:hidden;
 `
 
-// const ErrorBox = styled.div`
-//     box-sizing:border-box;
-//     margin:0 auto;
-//     width:400px;
-//     height:25px;
-//     background:hotpink;
-//     margin-bottom:10px;
-// `
+const ErrorBox = (props: {message: string}) => <ErrBox> {props.message} </ErrBox>
+
 
 
 const Header = (props: {p1score: number, p2score:number} ) => {
@@ -226,8 +222,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         this.nodes.forEach((node:Node) => {
             grid[node[0]][node[1]] = "NODE"
         })
-        //Seems to be a bug where changeGrid gets called twice with grid as undefined the second time
-        // FIX THE BUG, partial solution is to add checking to input in the reducer
+
         this.props.changeGrid(grid)
         this.props.changeEdges(this.edges)
         this.props.changeNodes(this.nodes)
@@ -269,7 +264,8 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
                     <Header p1score={0} p2score={-1} />
                     <EdgeScore />
                     <Grid rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
-                    <RoundScore></RoundScore>
+                    <RoundScore/>
+                    <ErrorBox message={'Yay'}/>
                     <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
                 </>
             )
