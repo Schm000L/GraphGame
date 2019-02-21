@@ -1,14 +1,15 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import Grid from './grid';
+import EdgeScore from './edgescore'
 import logo from '../logo.svg';
-import {ROWS, COLUMNS} from '../config'
-import {Block, Edge, Node} from '../helpers/customtypes'
+import { ROWS, COLUMNS } from '../config'
+import { Block, Edge, Node } from '../helpers/customtypes'
 
 
-import {updateBlock, changeGrid} from '../state-management/grid'
-import {changeEdges, EdgeState} from '../state-management/edges'
-import {changeNodes} from '../state-management/nodes'
+import { updateBlock, changeGrid } from '../state-management/grid'
+import { changeEdges, EdgeState } from '../state-management/edges'
+import { changeNodes } from '../state-management/nodes'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
 
@@ -43,7 +44,7 @@ const Logo = styled.img`
     position:absolute;
     top:5px;
 `
-const ScoreBox = styled.div`
+const GameScoreBox = styled.div`
     margin: 0 auto;
     height: inherit;
     width: 400px;
@@ -51,7 +52,7 @@ const ScoreBox = styled.div`
     display:flex;
     flex-direction:row;
 `
-const P1Score = styled.div`
+const P1GameScore = styled.div`
     display:flex;
     box-sizing:border-box;
     height:inherit;
@@ -62,7 +63,7 @@ const P1Score = styled.div`
     align-items:center;
 `
 
-const P2Score = styled.div`
+const P2GameScore = styled.div`
     display:flex;
     box-sizing:border-box;
     height:inherit;
@@ -72,13 +73,12 @@ const P2Score = styled.div`
     justify-content: center;
     align-items:center;
 `
-const FeedbackBox = styled.div`
-    box-sizing:border-box;
-    margin:0 auto;
-    width:400px;
-    height:25px;
-    background:hotpink;
-    margin-bottom:10px;
+const RoundScore = styled.div`
+    height: 40px;
+    width: 80px;
+    background:red;
+    display:flex;
+    flex-direction:row;
 `
 
 // const ErrorBox = styled.div`
@@ -95,10 +95,10 @@ const Header = (props: {p1score: number, p2score:number} ) => {
     return (
         <HeadBanner>
             <Logo src={logo} alt="logo" />
-            <ScoreBox>
-                <P1Score> {props.p1score >= 0 ? props.p1score : '-'} </P1Score>
-                <P2Score> {props.p2score >= 0 ? props.p2score : '-'} </P2Score>
-            </ScoreBox>
+            <GameScoreBox>
+                <P1GameScore> {props.p1score >= 0 ? props.p1score : '-'} </P1GameScore>
+                <P2GameScore> {props.p2score >= 0 ? props.p2score : '-'} </P2GameScore>
+            </GameScoreBox>
         </HeadBanner>
     )
 }
@@ -267,8 +267,9 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
             return(
                 <>
                     <Header p1score={0} p2score={-1} />
-                    <FeedbackBox></FeedbackBox>
+                    <EdgeScore />
                     <Grid rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
+                    <RoundScore></RoundScore>
                     <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
                 </>
             )

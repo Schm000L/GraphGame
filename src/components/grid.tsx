@@ -1,10 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import {Row, EdgeComponent, /*EdgePoints*/} from './gridcomponents'
-import {COLUMNS,  BLOCKSIZE} from '../config'
-import {Block, Node, Edge} from '../helpers/customtypes'
+import { Row, EdgeComponent } from './gridcomponents'
+import { COLUMNS,  BLOCKSIZE } from '../config'
+import { Block, Node, Edge } from '../helpers/customtypes'
 import { updateBlock } from '../state-management/grid';
 import { claimEdge} from '../state-management/edges'
+import { updateHovered } from '../state-management/hovered'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
 import { edgeParameters } from '../helpers/edgemath';
@@ -45,7 +46,8 @@ interface StateProps {
 
 interface DispatchProps {
     updateBlock: typeof updateBlock,
-    claimEdge: typeof claimEdge
+    claimEdge: typeof claimEdge,
+    updateHovered: typeof updateHovered
 }
 
 const mapStateToProps = (state: RootState) => {
@@ -61,7 +63,8 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: any) => {
     return {
       updateBlock: (block: Block, row: number, column: number) => dispatch(updateBlock(block, row, column)),
-      claimEdge: (edge: Edge, player: boolean) => dispatch(claimEdge(edge, player))
+      claimEdge: (edge: Edge, player: boolean) => dispatch(claimEdge(edge, player)),
+      updateHovered: (points: number|undefined) => dispatch(updateHovered(points))
     }
 }
 
@@ -135,7 +138,10 @@ class Grid extends React.Component<GridProps,GridState> {
         }
     }
 
-    // IDÉ: Skapa edgecontainer, state på hover.
+    edgeHover = (points: number|undefined) => {
+        this.props.updateHovered(points)
+    }
+
     renderEdges(){
         let toRet = this.props.edges.map((edge:Edge, index:number) => {
             let [top, left, width, rotation] = edgeParameters(this.props.nodes[edge.firstNode], this.props.nodes[edge.secondNode])
@@ -147,16 +153,7 @@ class Grid extends React.Component<GridProps,GridState> {
             if(this.props.p2Edges.includes(index))
                 clr = red
 
-            // if(index === 0) {
-            //     console.log("------------------------------")
-            //     console.log("Point Disp:", "Between", this.props.nodes[edge.firstNode], "and", this.props.nodes[edge.secondNode])
-            //     console.log("Top:", top)
-            //     console.log("Top offset:", width*Math.sin(rotation))
-            //     console.log("Left:", left)
-            //     console.log("Left offset:", width*Math.cos(rotation))
-            //     console.log("------------------------------")
-            // }
-            return <EdgeComponent top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} colour={clr} dispatch={this.edgeClick} key={"edge" + Math.random + index}/>
+            return <EdgeComponent top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} colour={clr} dispatchClick={this.edgeClick} dispatchHover={this.edgeHover} key={"edge" + Math.random + index}/>
         })
         // toRet.push(<EdgePoints key="fsdgvbcjknubvkhjbhjhbjhjbjkhb"><p>HEJJEJ</p></EdgePoints>)
         return toRet

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { BLOCKSIZE } from '../config';
-import {Block, Edge} from '../helpers/customtypes'
+import { Block, Edge } from '../helpers/customtypes'
 
 export const EmptyBlock = styled.div `
     width:${BLOCKSIZE}px;
@@ -107,71 +107,27 @@ interface EdgeProps {
     width: number,
     rotation: number,
     zIndex: number,
-    dispatch: (edge:Edge) => void,
+    dispatchClick: (edge:Edge) => void,
+    dispatchHover: (points: number|undefined) => void,
     colour: [number, number, number]
     edge: Edge
 }
 
 export const EdgeComponent = (props: EdgeProps) => {
     const handleClickEvent = (event: React.MouseEvent<HTMLElement>) => { 
-        return props.dispatch(props.edge)
+        return props.dispatchClick(props.edge)
     }
-    return <EdgeElement top={props.top} left={props.left} width={props.width} rotation={props.rotation} zIndex={props.zIndex} colour={props.colour} onClick={handleClickEvent}>
-       
 
-        </EdgeElement>
+    const handleMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+        return props.dispatchHover(props.edge.points)
+    }
+
+    const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
+        return props.dispatchHover(undefined)
+    }
+
+    return <EdgeElement top={props.top} left={props.left} width={props.width} 
+        rotation={props.rotation} zIndex={props.zIndex} colour={props.colour} 
+        onClick={handleClickEvent} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} > 
+    </EdgeElement>
 }
-
-// Temporarily removed EdgePts while looking for better solution, add the code below between EdgeElement-tag above to go back
-/* <EdgePts top={props.top} left={props.left} width={props.width} rotation={props.rotation} zIndex={props.zIndex} points={props.edge.points}>
-{`${props.edge.points}`}
-</EdgePts> */
-
-interface PointProps {
-    top: number,
-    left: number,
-    width:number,
-    zIndex: number,
-    rotation: number,
-    points: number
-}
-
-// TOP: (node1[0]+0.5)*BLOCKSIZE-5*Math.cos(rotation)
-// LEFT: (node1[1]+0.5)*BLOCKSIZE+5*Math.sin(rotation)
-
-export const EdgePts = styled.p`
-    position: absolute;
-    transform-origin:0 0 0;
-    transform: rotate(${(props:PointProps)=>-props.rotation}rad);
-    // width:50px;
-    // height:30px;
-    top: ${(props:PointProps) => -props.top}px;
-    // left doesn't seem to work
-    left: ${(props:PointProps) =>-props.left}px; 
-
-    // top:${(props:PointProps) => Math.abs(Math.cos(props.rotation))}px;
-    // left:${(props:PointProps) => 0.5*props.width-20/2}px;
-    // z-index:${(props:PointProps) => 10000};
-    z-index: 200;
-    // background-color:pink;
-
-    
-    visibility:hidden;
-    ${EdgeElement}:hover & {
-        visibility:visible;
-    }
-`
-// top:${(props:PointProps) => props.top+0.5*props.width*Math.sin(props.rotation)}px;
-// left:${(props:PointProps) => props.left+0.5*props.width*Math.cos(props.rotation)}px;
-
-export const EdgePoints = styled.div`
-    position: absolute;
-    top:250px;
-    left:10px;
-    width:100px;
-    height:50px;
-    background-color:red;
-    ${EdgeElement}:hover & {
-                background-color:green;
-    }
-` 
