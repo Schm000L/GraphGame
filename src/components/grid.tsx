@@ -47,7 +47,8 @@ interface StateProps {
 interface DispatchProps {
     updateBlock: typeof updateBlock,
     claimEdge: typeof claimEdge,
-    updateHovered: typeof updateHovered
+    updateHovered: typeof updateHovered,
+    gameScoreUpdate: (p1: boolean) => void
 }
 
 const mapStateToProps = (state: RootState) => {
@@ -81,25 +82,48 @@ class Grid extends React.Component<GridProps,GridState> {
     componentDidUpdate(prevProps: GridProps, prevState: GridState) {
         if(prevProps.p1Edges !== this.props.p1Edges || prevProps.p2Edges !== this.props.p2Edges) {
             this.setState({connectedNodes: this.getConnectedNodes()})
-            this.calculateScore()
+            
+            // OBS: There's seems to be a bug where this condition isn't met although it should be
+            if(this.props.nodes.length === this.getConnectedNodes().length) {
+                console.log('REACHED GOAL STATE')
+                let {p1score, p2score} = this.calculateScore()
+                if(p1score !== p2score)
+                    this.props.gameScoreUpdate(p1score > p2score)
+                console.log(`WINNER: ${p1score === p2score ? 'None - DRAW' : (p1score > p2score ? 'P1' : 'P2') }`)
+            }
         }
     }
 
-    
-    calculateScore() {
-        let score = 0
+    calculateScore(): {p1score: number, p2score: number} {
+        let p1score = 0
+        let p2score = 0
         const p1Edges = this.props.p1Edges
         const p2Edges = this.props.p2Edges
         const edges = this.props.edges
-        if(!this.p1sTurn) { //!this.p1sTurn since it's called before click
-            if(p1Edges && p1Edges.length > 0 && edges && edges.length > 0)
-                p1Edges.forEach((index:number) => score+= edges[index].points )
-        } else {
-            if(p2Edges && p2Edges.length > 0 && edges && edges.length > 0)
-                p2Edges.forEach((index:number) => score+= edges[index].points )
+        
+        if(edges && edges.length > 0) {
+            if(p1Edges && p1Edges.length > 0)
+                    p1Edges.forEach((index:number) => p1score+= edges[index].points )
+            
+            if(p2Edges && p2Edges.length > 0)
+                p2Edges.forEach((index:number) => p2score+= edges[index].points )
         }
-        console.log(!this.p1sTurn ? "P1 score:":"P2 score:", score)
+        return {p1score, p2score}
     }
+
+    // calculateScore() {
+    //     let score = 0
+    //     const p1Edges = this.props.p1Edges
+    //     const p2Edges = this.props.p2Edges
+    //     const edges = this.props.edges
+    //     if(!this.p1sTurn) { //!this.p1sTurn since it's called before click
+    //         if(p1Edges && p1Edges.length > 0 && edges && edges.length > 0)
+    //             p1Edges.forEach((index:number) => score+= edges[index].points )
+    //     } else {
+    //         if(p2Edges && p2Edges.length > 0 && edges && edges.length > 0)
+    //             p2Edges.forEach((index:number) => score+= edges[index].points )
+    //     }
+    // }
 
 
     getConnectedNodes() {
@@ -155,7 +179,7 @@ class Grid extends React.Component<GridProps,GridState> {
 
             return <EdgeComponent top={top} left={left} width={width} rotation={rotation} zIndex={index} edge={edge} colour={clr} dispatchClick={this.edgeClick} dispatchHover={this.edgeHover} key={"edge" + Math.random + index}/>
         })
-        // toRet.push(<EdgePoints key="fsdgvbcjknubvkhjbhjhbjhjbjkhb"><p>HEJJEJ</p></EdgePoints>)
+
         return toRet
     }
 

@@ -212,6 +212,13 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         return edges;
     }
 
+    gameScoreUpdate = (p1: boolean) => {
+        if(p1)
+            this.setState({ p1Score: this.state.p1Score+1})
+        else 
+            this.setState({ p2Score: this.state.p2Score+1})
+    }
+
     componentDidMount(){
         let grid:Block[][] = []
         for(let i = 0; i<ROWS; i++) {
@@ -265,9 +272,9 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         if(!this.state.loading)
             return(
                 <>
-                    <Header p1score={0} p2score={-1} />
+                    <Header p1score={this.state.p1Score} p2score={this.state.p2Score} />
                     <EdgeScore />
-                    <Grid rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
+                    <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
                     <RoundScore/>
                     <ErrorBox message={'Yay'}/>
                     <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
