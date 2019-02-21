@@ -1,5 +1,5 @@
-import {Action, Reducer} from 'redux'
-import {Edge, Node} from '../helpers/customtypes';
+import { Action, Reducer } from 'redux'
+import { Edge, Node } from '../helpers/customtypes';
 
 const intialState: EdgeState = {
     edges: [],
@@ -16,6 +16,7 @@ export interface EdgeState {
 const UPDATE_EDGE = "UPDATE_EDGE"
 const CHANGE_EDGES = "CHANGE_EDGES"
 const CLAIM_EDGE = "CLAIM_EDGE"
+const RESET_CLAIMED_EDGES = "RESET_CLAIMED_EDGES"
 
 export interface edgeAction extends Action, updateEdgeAction, changeEdgesAction, claimEdgesAction {}
 
@@ -50,6 +51,10 @@ export const claimEdge = (edge:Edge, player: boolean) => ({
     player: player
 })
 
+export const resetClaimedEdges = () => ({
+    type: RESET_CLAIMED_EDGES
+})
+
 export const edgeReducer: Reducer<EdgeState> = (state: EdgeState=intialState, action:edgeAction) => {
     switch(action.type) {
         case UPDATE_EDGE:
@@ -58,12 +63,14 @@ export const edgeReducer: Reducer<EdgeState> = (state: EdgeState=intialState, ac
         case CHANGE_EDGES:
           return Object.assign({}, state, {edges:action.edges})
             
-        // TODO: Do check to not allow duplicates and claiming the other player's edges
         case CLAIM_EDGE:
             let edgeIndex = state.edges.findIndex((edge:Edge) => edge===action.edge)
             if( edgeIndex>=0 && !state.p1Edges.includes(edgeIndex) && !state.p2Edges.includes(edgeIndex) ) 
                     return action.player ? Object.assign({}, state, {p1Edges: [...state.p1Edges, edgeIndex]}) : Object.assign({},state, {p2Edges: [...state.p2Edges, edgeIndex]})
             return state            
+
+        case RESET_CLAIMED_EDGES:
+        return Object.assign({}, state, {p1Edges: [], p2Edges: []})
 
         default:
             return state

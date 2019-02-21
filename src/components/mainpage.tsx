@@ -9,7 +9,7 @@ import { Block, Edge, Node } from '../helpers/customtypes'
 
 
 import { updateBlock, changeGrid } from '../state-management/grid'
-import { changeEdges, EdgeState } from '../state-management/edges'
+import { changeEdges, resetClaimedEdges,EdgeState } from '../state-management/edges'
 import { changeNodes } from '../state-management/nodes'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
@@ -111,7 +111,8 @@ const mapDispatchToProps = (dispatch: any) => {
       updateBlock: (block: Block, row: number, column: number) => dispatch(updateBlock(block, row, column)),
       changeGrid: (grid: Block[][]) => dispatch(changeGrid(grid)),
       changeEdges: (edges: Edge[]) => dispatch(changeEdges(edges)),
-      changeNodes: (nodes: Node[]) => dispatch(changeNodes(nodes))
+      changeNodes: (nodes: Node[]) => dispatch(changeNodes(nodes)),
+      resetClaimedEdges: () => dispatch(resetClaimedEdges())
     }
 }
 
@@ -134,7 +135,8 @@ interface DispatchProps {
     updateBlock: typeof updateBlock,
     changeGrid: typeof changeGrid,
     changeEdges: typeof changeEdges,
-    changeNodes: typeof changeNodes
+    changeNodes: typeof changeNodes,
+    resetClaimedEdges: typeof resetClaimedEdges
 }
 
 class MainPage extends React.Component<MainPageProps, MainPageState> {
@@ -251,8 +253,10 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
             grid[node[0]][node[1]] = "NODE"
         })
         this.props.changeGrid(grid)
+        this.props.resetClaimedEdges()
         this.props.changeEdges(this.edges)
         this.props.changeNodes(this.nodes)
+
 
         this.setState({loading: false})
     }
