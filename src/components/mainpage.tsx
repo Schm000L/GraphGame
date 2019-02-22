@@ -4,7 +4,7 @@ import Grid from './grid';
 import EdgeScore from './edgescore'
 import RoundScore from './roundscore'
 import logo from '../logo.svg';
-import { ROWS, COLUMNS } from '../config'
+import { ROWS, COLUMNS, BLOCKSIZE } from '../config'
 import { Block, Edge, Node } from '../helpers/customtypes'
 
 
@@ -13,6 +13,7 @@ import { changeEdges, resetClaimedEdges,EdgeState } from '../state-management/ed
 import { changeNodes } from '../state-management/nodes'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
+import { ErrorMessage} from '../state-management/error'
 
 /* TODO:
  * Move some logic from grid.tsx to mainpage
@@ -76,16 +77,33 @@ const P2GameScore = styled.div`
 const ErrBox = styled.div`
     box-sizing:border-box;
     margin:0 auto;
-    width:400px;
-    height:25px;
-    background:hotpink;
+    width:100px;
+    height:50px;
+    background:red;
     margin-bottom:10px;
-    visibility:hidden;
 `
 
-const ErrorBox = (props: {message: string}) => <ErrBox> {props.message} </ErrBox>
+const ErrorBox = (props: {message: ErrorMessage}) => {
+    if(props.message)
+        return <ErrBox> {props.message} </ErrBox>
+    else 
+        return <></>
+    }
+const GameArea = styled.div`
+    display:flex;
+    flex-direction:row;
+    width:100 %;
+    height:${ROWS*BLOCKSIZE}px;
+`
 
-
+const Container = styled.div`
+    width:${(1920 - COLUMNS*BLOCKSIZE) / 2}px;
+    height: inherit;
+    background:brown;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+`
 
 const Header = (props: {p1score: number, p2score:number} ) => {
     return (
@@ -102,7 +120,8 @@ const Header = (props: {p1score: number, p2score:number} ) => {
 const mapStateToProps = (state: RootState) => {
     return {
       grid: state.gridReducer.grid,
-      edgeReducer: state.edgeReducer
+      edgeReducer: state.edgeReducer,
+      errorMessage: state.errorReducer.errorMessage
     }
   }
 
@@ -128,7 +147,8 @@ interface MainPageProps extends StateProps, DispatchProps {
 
 interface StateProps {
     grid: Block[][],
-    edgeReducer: EdgeState
+    edgeReducer: EdgeState,
+    errorMessage: ErrorMessage
 } 
 
 interface DispatchProps {
@@ -274,9 +294,14 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
                 <>
                     <Header p1score={this.state.p1Score} p2score={this.state.p2Score} />
                     <EdgeScore />
-                    <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
+                    <GameArea>
+                        <Container>
+                        <ErrorBox message={this.props.errorMessage}/>
+                        </Container>
+                        <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
+                        <Container/>
+                    </GameArea>
                     <RoundScore/>
-                    <ErrorBox message={'Yay'}/>
                     <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
                 </>
             )

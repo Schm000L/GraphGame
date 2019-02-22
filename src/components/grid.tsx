@@ -21,7 +21,6 @@ const BaseGrid = styled.div`
     flex-direction:column;
     width:${COLUMNS*BLOCKSIZE}px;
     padding:0;
-    margin:0 auto;
     text-align:center;
     border:1px solid hotpink;
 `
@@ -191,7 +190,7 @@ class Grid extends React.Component<GridProps,GridState> {
         
             return(
                 <>
-                <BaseGrid style={{width: 50*this.props.rows+''}}>
+                <BaseGrid style={{width: `${50*this.props.rows}`}}>
                     {toRender}
                     {this.renderEdges()}
                 </BaseGrid>
