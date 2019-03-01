@@ -188,6 +188,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         return nodes
     }
 
+    // TODO: Fixa dubbelnoder
     createNodes3():Node[] {
         let nodes:Node[] = [[4,0]]
         for(let i = 2; i<=COLUMNS; i+=this.distance) { // COLUMNS

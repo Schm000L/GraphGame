@@ -1,6 +1,6 @@
-import {Action, Reducer} from 'redux'
-import {ROWS} from '../config';
-import {Block} from '../helpers/customtypes'
+import { Action, Reducer } from 'redux'
+import { ROWS } from '../config';
+import { Block } from '../helpers/customtypes'
 
 let initialGrid:Block[][] = []
 for(let i = 0; i<ROWS; i++)
