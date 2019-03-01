@@ -13,7 +13,7 @@ import { changeEdges, resetClaimedEdges,EdgeState } from '../state-management/ed
 import { changeNodes } from '../state-management/nodes'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
-import { ErrorMessage} from '../state-management/error'
+import { ErrorMessage} from '../state-management/error';
 
 /* TODO:
  * Move some logic from grid.tsx to mainpage
@@ -188,15 +188,25 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         return nodes
     }
 
-    // TODO: Fixa dubbelnoder
+    nodeInArr(nodes:Node[], node:Node) {
+        let ret = false
+        nodes.forEach( (n:Node) => {
+            if(n[0] === node[0] && n[1] === node[1])
+                ret = true
+        })
+        return ret
+    }
+
     createNodes3():Node[] {
         let nodes:Node[] = [[4,0]]
         for(let i = 2; i<=COLUMNS; i+=this.distance) { // COLUMNS
             let nodesAtColumn = 0
             let j=0
-            while(nodesAtColumn<1+Math.floor(Math.random()*2.5)) {
+            let numNodes = 1+Math.floor(Math.random()*2.5)
+            console.log(`Number of nodes for row ${i} is ${numNodes}`)
+            while(nodesAtColumn<numNodes) {
                 j = (j+this.distance) % (ROWS-1)
-                if(Math.random() >= 0.3) {
+                if(Math.random() >= 0.3  && !this.nodeInArr(nodes, [j, i])) {
                     nodesAtColumn++
                     nodes.push([j, i])
                 }

@@ -82,7 +82,6 @@ class Grid extends React.Component<GridProps,GridState> {
         if(prevProps.p1Edges !== this.props.p1Edges || prevProps.p2Edges !== this.props.p2Edges) {
             this.setState({connectedNodes: this.getConnectedNodes()})
             
-            // OBS: There's seems to be a bug where this condition isn't met although it should be
             if(this.props.nodes.length === this.getConnectedNodes().length) {
                 console.log('REACHED GOAL STATE')
                 let {p1score, p2score} = this.calculateScore()
