@@ -203,7 +203,6 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
             let nodesAtColumn = 0
             let j=0
             let numNodes = 1+Math.floor(Math.random()*2.5)
-            console.log(`Number of nodes for row ${i} is ${numNodes}`)
             while(nodesAtColumn<numNodes) {
                 j = (j+this.distance) % (ROWS-1)
                 if(Math.random() >= 0.3  && !this.nodeInArr(nodes, [j, i])) {
