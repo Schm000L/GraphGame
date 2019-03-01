@@ -3,7 +3,11 @@ import styled from 'styled-components'
 import { BLOCKSIZE } from '../config';
 import { Block, Edge } from '../helpers/customtypes'
 
-export const EmptyBlock = styled.div `
+
+// TODO: Highlight connected nodes
+// Add visual aid when edge goes through a node
+
+export const EmptyBlock = styled.div`
     width:${BLOCKSIZE}px;
     height:inherit;
     background-color: rgb(200, 200, 10);
@@ -32,24 +36,33 @@ const NodeContainer = styled.div `
     }
 `
 
+type NodeProps = {
+    connected?: boolean
+}
+
 const NODE = styled.div `
+    box-sizing: border-box;
     width:${BLOCKSIZE}px;
     height:inherit;
     border-radius:${Math.floor(BLOCKSIZE/2)}px;
-    background-color: blue;
+    background-color: ${(props:NodeProps = {connected: false}) => props.connected ? 'skyblue' : 'blue'};
     margin: 0;
     position:inherit;
     z-index:100;
     &:hover {
         background-color:white;
     }
+    border:4px double navy;
+    box-shadow: 0 0 10px 3px black inset;
 `
-export const Node = () => <NodeContainer><NODE/></NodeContainer>
+
+export const Node = (props: NodeProps) => <NodeContainer><NODE connected={props.connected}/></NodeContainer>
 
 
 interface RowProps{
     blocks: Block[],
-    rowIndex: number
+    rowIndex: number,
+    connectedNodes?: number[]
 }
 
 const BaseRow = styled.div`
@@ -66,7 +79,7 @@ const BaseRow = styled.div`
 
 export const Row = (props: RowProps) => <BaseRow>
     { props.blocks.map( (block:Block, i:number) => block === "NODE" ? 
-        <Node key={'block'+props.rowIndex+i+Math.random}/> : <EmptyBlock key={'block'+props.rowIndex+i+Math.random}/>
+        <Node key={'block'+props.rowIndex+i+Math.random} connected={props.connectedNodes && props.connectedNodes.includes(i)}/> : <EmptyBlock key={'block'+props.rowIndex+i+Math.random}/>
     )}
 </BaseRow>
 

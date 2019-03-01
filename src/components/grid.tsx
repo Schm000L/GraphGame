@@ -142,6 +142,18 @@ class Grid extends React.Component<GridProps,GridState> {
         return connNodes
     }
 
+    // TODO: See if simplyfiable with .reduce
+    getConnectedNodesByRow(row:number) {
+        let connNodes = this.getConnectedNodes()
+        let toRet:number[] = []
+
+        connNodes.forEach((conn:number) => {
+            if(this.props.nodes[conn][0] === row)
+                toRet.push(this.props.nodes[conn][1])
+        })
+
+        return toRet
+    }
 
     edgeClick = (edge:Edge) => {
         if(this.props.nodes.length === this.getConnectedNodes().length) {
@@ -185,7 +197,7 @@ class Grid extends React.Component<GridProps,GridState> {
     render(){
         if(this.props.grid) {
             let toRender = this.props.grid.map((row: Block[], index: number) => {
-                return <Row blocks={row} rowIndex={index} key={"Row"+index}/>
+                return <Row blocks={row} rowIndex={index} connectedNodes={this.getConnectedNodesByRow(index)} key={"Row"+index}/>
             })
         
             return(
