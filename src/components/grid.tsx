@@ -80,9 +80,10 @@ class Grid extends React.Component<GridProps,GridState> {
 
     componentDidUpdate(prevProps: GridProps, prevState: GridState) {
         if(prevProps.p1Edges !== this.props.p1Edges || prevProps.p2Edges !== this.props.p2Edges) {
-            this.setState({connectedNodes: this.getConnectedNodes()})
+            let connectedNodes = this.getConnectedNodes()
+            this.setState({connectedNodes: connectedNodes})
             
-            if(this.props.nodes.length === this.getConnectedNodes().length) {
+            if(this.props.nodes.length === connectedNodes.length) {
                 console.log('REACHED GOAL STATE')
                 let {p1score, p2score} = this.calculateScore()
                 if(p1score !== p2score)
@@ -144,14 +145,14 @@ class Grid extends React.Component<GridProps,GridState> {
     // TODO: See if simplyfiable with .reduce
     getConnectedNodesByRow(row:number) {
         let connNodes = this.getConnectedNodes()
-        let toRet:number[] = []
+        let connectedNodesOnRow:number[] = []
 
         connNodes.forEach((conn:number) => {
             if(this.props.nodes[conn][0] === row)
-                toRet.push(this.props.nodes[conn][1])
+            connectedNodesOnRow.push(this.props.nodes[conn][1])
         })
 
-        return toRet
+        return connectedNodesOnRow
     }
 
     edgeClick = (edge:Edge) => {
@@ -193,6 +194,7 @@ class Grid extends React.Component<GridProps,GridState> {
         return toRet
     }
 
+    // TODO: Should probably move toRender and renderEdges() elsewhere
     render(){
         if(this.props.grid) {
             let toRender = this.props.grid.map((row: Block[], index: number) => {

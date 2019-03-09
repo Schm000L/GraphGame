@@ -34,7 +34,6 @@ const mapStateToProps = (state: RootState) => {
     }
 }
 
-
 class EdgeScore extends React.Component<EdgeScoreProps,EdgeScoreState> {
     render(){
         return <EdgeBox>Edge score: {this.props.points !== undefined ? this.props.points : '-'}</EdgeBox>

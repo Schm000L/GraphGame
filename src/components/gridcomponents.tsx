@@ -94,6 +94,11 @@ export type ElementProps = {
 }
 
 
+// .attrs({
+    // Put all changing style attributes here!
+    // style: (props: {} | ElementProps) => ( {backgroundColor: `rgb(${props.colour[0]} ${props.colour[1]} ${props.colour[2]})`} )
+// })
+
 export const EdgeElement = styled.div`
     position: absolute;
     top:${(props:ElementProps) => props.top}px;
