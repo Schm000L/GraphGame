@@ -74,13 +74,18 @@ const P2GameScore = styled.div`
     align-items:center;
 `
 
+// TODO: Change ErrorBox to feedback box: Green for positive, red for negative.
 const ErrBox = styled.div`
     box-sizing:border-box;
     margin:0 auto;
-    width:100px;
-    height:50px;
+    width:200px;
+    height:100px;
     background:red;
     margin-bottom:10px;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    text-align:center;
 `
 
 const ErrorBox = (props: {message: ErrorMessage}) => {

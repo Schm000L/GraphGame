@@ -10,9 +10,9 @@ import { Block, Edge } from '../helpers/customtypes'
 export const EmptyBlock = styled.div`
     width:${BLOCKSIZE}px;
     height:inherit;
-    background-color: rgb(200, 200, 10);
+    /* background-color: rgb(200, 200, 10); */
     margin: 0;
-    &:nth-child(odd) {
+    /* &:nth-child(odd) {
         background-color:rgb(10, 200, 10);
         &:hover {
             background-color:green;
@@ -22,42 +22,12 @@ export const EmptyBlock = styled.div`
         &:hover{
             background-color:blue;
         }
-    }
+    } */
 `
-
-// const NodeContainer = styled.div `
-//     position:relative;
-//     width:${BLOCKSIZE}px;
-//     height:${BLOCKSIZE}px;
-//     margin: 0;
-//     background-color:rgb(200, 200, 10);
-//     &:nth-child(odd) {
-//         background-color:rgb(10, 200, 10);
-//     }
-// `
 
 type NodeProps = {
     connected?: boolean
 }
-
-// const NODE = styled.div `
-//     box-sizing: border-box;
-//     width:${BLOCKSIZE}px;
-//     height:inherit;
-//     border-radius:${Math.floor(BLOCKSIZE/2)}px;
-//     background-color: ${(props:NodeProps = {connected: false}) => props.connected ? 'skyblue' : 'blue'};
-//     margin: 0;
-//     position:inherit;
-//     z-index:100;
-//     &:hover {
-//         background-color:white;
-//     }
-//     border:4px double navy;
-//     box-shadow: 0 0 10px 3px black inset;
-// `
-
-// export const Node = (props: NodeProps) => <NodeContainer><NODE connected={props.connected}/></NodeContainer>
-
 
 export const Node = styled.div `
     box-sizing: border-box;
@@ -100,6 +70,7 @@ export const Row = (props: RowProps) => <BaseRow>
 </BaseRow>
 
 
+// TODO: Refactor Edge
 export type ElementProps = {
     top: number,
     left: number,
@@ -118,7 +89,7 @@ export const EdgeElement = styled.div.attrs<ElementProps>({
 
         transform: `rotate(${props.rotation}rad)`,
         zIndex: `${props.zIndex}`,
-    } )
+    })
 })`
     box-sizing:border-box;
     position: absolute;
