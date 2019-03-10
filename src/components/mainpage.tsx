@@ -44,7 +44,7 @@ const Logo = styled.img`
     position:absolute;
     top:5px;
 `
-const GameScoreBox = styled.div`
+const GameScoreContainer = styled.div`
     margin: 0 auto;
     height: inherit;
     width: 400px;
@@ -52,25 +52,19 @@ const GameScoreBox = styled.div`
     display:flex;
     flex-direction:row;
 `
-const P1GameScore = styled.div`
+
+type GameScore = {
+    p2?: boolean
+}
+
+const GameScoreBox = styled.div`
     display:flex;
     box-sizing:border-box;
     height:inherit;
     width: 200px;
     border-right:5px solid black;
-    background:blue;
+    background: ${(props: GameScore) => props.p2 ? 'green' : 'blue'};
     justify-content:center;
-    align-items:center;
-`
-
-const P2GameScore = styled.div`
-    display:flex;
-    box-sizing:border-box;
-    height:inherit;
-    width: 200px;
-    border-left: 5px solid black; 
-    background:green;
-    justify-content: center;
     align-items:center;
 `
 
@@ -114,10 +108,10 @@ const Header = (props: {p1score: number, p2score:number} ) => {
     return (
         <HeadBanner>
             <Logo src={logo} alt="logo" />
-            <GameScoreBox>
-                <P1GameScore> {props.p1score >= 0 ? props.p1score : '-'} </P1GameScore>
-                <P2GameScore> {props.p2score >= 0 ? props.p2score : '-'} </P2GameScore>
-            </GameScoreBox>
+            <GameScoreContainer>
+                <GameScoreBox> {props.p1score >= 0 ? props.p1score : '-'} </GameScoreBox>
+                <GameScoreBox p2> {props.p2score >= 0 ? props.p2score : '-'} </GameScoreBox>
+            </GameScoreContainer>
         </HeadBanner>
     )
 }
