@@ -92,7 +92,7 @@ const ErrorBox = (props: {message: ErrorMessage}) => {
 const GameArea = styled.div`
     display:flex;
     flex-direction:row;
-    width:100 %;
+    width:100%;
     height:${ROWS*BLOCKSIZE}px;
 `
 
