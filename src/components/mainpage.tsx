@@ -13,7 +13,7 @@ import { changeEdges, resetClaimedEdges,EdgeState } from '../state-management/ed
 import { changeNodes } from '../state-management/nodes'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
-import { ErrorMessage} from '../state-management/error';
+import { FeedbackMessage } from '../state-management/feedback'
 
 /* TODO:
  * Move some logic from grid.tsx to mainpage
@@ -82,7 +82,7 @@ const ErrBox = styled.div`
     text-align:center;
 `
 
-const ErrorBox = (props: {message: ErrorMessage}) => {
+const ErrorBox = (props: {message: FeedbackMessage}) => {
     if(props.message)
         return <ErrBox> {props.message} </ErrBox>
     else 
@@ -120,7 +120,7 @@ const mapStateToProps = (state: RootState) => {
     return {
       grid: state.gridReducer.grid,
       edgeReducer: state.edgeReducer,
-      errorMessage: state.errorReducer.errorMessage
+      errorMessage: state.feedbackReducer.feedbackMessage
     }
   }
 
@@ -147,7 +147,7 @@ interface MainPageProps extends StateProps, DispatchProps {
 interface StateProps {
     grid: Block[][],
     edgeReducer: EdgeState,
-    errorMessage: ErrorMessage
+    errorMessage: FeedbackMessage
 } 
 
 interface DispatchProps {

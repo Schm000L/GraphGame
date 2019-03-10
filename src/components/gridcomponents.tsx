@@ -1,8 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { BLOCKSIZE } from '../config';
+import { BLOCKSIZE, COLUMNS } from '../config';
 import { Block, Edge } from '../helpers/customtypes'
-
 
 // TODO: Highlight connected nodes
 // Add visual aid when edge goes through a node
@@ -69,6 +68,15 @@ export const Row = (props: RowProps) => <BaseRow>
     )}
 </BaseRow>
 
+export const BaseGrid = styled.div`
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    width:${COLUMNS*BLOCKSIZE}px;
+    padding:0;
+    text-align:center;
+    border:1px solid hotpink;
+`
 
 // TODO: Refactor Edge
 export type ElementProps = {

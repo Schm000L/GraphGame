@@ -1,7 +1,5 @@
 import * as React from 'react'
-import styled from 'styled-components'
-import { Row, EdgeComponent } from './gridcomponents'
-import { COLUMNS,  BLOCKSIZE } from '../config'
+import { Row, EdgeComponent, BaseGrid } from './gridcomponents'
 import { Block, Node, Edge } from '../helpers/customtypes'
 import { updateBlock } from '../state-management/grid';
 import { claimEdge} from '../state-management/edges'
@@ -9,22 +7,12 @@ import { updateHovered } from '../state-management/hovered'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
 import { edgeParameters } from '../helpers/edgemath';
-import { updateError, ErrorMessage } from '../state-management/error';
+import { setErrorMessage, setInfoMessage, resetFeedback, FeedbackMessage } from '../state-management/feedback';
 
 const blue:[number, number, number] = [0,0,255] 
 const red: [number, number, number] = [255,0,0]
 const black: [number, number, number] = [0,0,0]
 const grey:[number, number, number] = [90, 90, 90]
-
-const BaseGrid = styled.div`
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    width:${COLUMNS*BLOCKSIZE}px;
-    padding:0;
-    text-align:center;
-    border:1px solid hotpink;
-`
 
 interface GridState {
     connectedNodes: number[]
@@ -49,7 +37,9 @@ interface DispatchProps {
     claimEdge: typeof claimEdge,
     updateHovered: typeof updateHovered,
     gameScoreUpdate: (p1: boolean) => void,
-    updateError: typeof updateError
+    setErrorMessage: typeof setErrorMessage,
+    setInfoMessage: typeof setInfoMessage,
+    resetFeedback: typeof resetFeedback
 }
 
 const mapStateToProps = (state: RootState) => {
@@ -64,10 +54,12 @@ const mapStateToProps = (state: RootState) => {
 
 const mapDispatchToProps = (dispatch: any) => {
     return {
-      updateBlock: (block: Block, row: number, column: number) => dispatch(updateBlock(block, row, column)),
-      claimEdge: (edge: Edge, player: boolean) => dispatch(claimEdge(edge, player)),
-      updateHovered: (points: number|undefined) => dispatch(updateHovered(points)),
-      updateError: (error: ErrorMessage) => dispatch(updateError(error))
+        updateBlock: (block: Block, row: number, column: number) => dispatch(updateBlock(block, row, column)),
+        claimEdge: (edge: Edge, player: boolean) => dispatch(claimEdge(edge, player)),
+        updateHovered: (points: number|undefined) => dispatch(updateHovered(points)),
+        setErrorMessage: (errorMessage: FeedbackMessage ) => dispatch(setErrorMessage(errorMessage)),
+        setInfoMessage: (infoMessage: FeedbackMessage) => dispatch(setInfoMessage(infoMessage)) ,
+        resetFeedback: () => dispatch(resetFeedback())
     }
 }
 
@@ -87,11 +79,11 @@ class Grid extends React.Component<GridProps,GridState> {
             this.setState({connectedNodes: connectedNodes})
             
             if(this.props.nodes.length === connectedNodes.length) {
-                console.log('REACHED GOAL STATE')
+                this.props.setInfoMessage('REACHED GOAL STATE')
                 let {p1score, p2score} = this.calculateScore()
                 if(p1score !== p2score)
                     this.props.gameScoreUpdate(p1score > p2score)
-                console.log(`WINNER: ${p1score === p2score ? 'None - DRAW' : (p1score > p2score ? 'P1' : 'P2') }`)
+                this.props.setInfoMessage(`WINNER: ${p1score === p2score ? 'None - DRAW' : (p1score > p2score ? 'P1' : 'P2') }`)
             }
         }
     }
@@ -145,19 +137,19 @@ class Grid extends React.Component<GridProps,GridState> {
 
     edgeClick = (edge:Edge) => {
         if(this.props.nodes.length === this.getConnectedNodes().length) {
-            this.props.updateError("ALL NODES REACHED - GAME IS DONE!!!!")
+            this.props.setErrorMessage("ALL NODES REACHED - GAME IS DONE!!!!")
         } else {
             if( this.state.connectedNodes.includes(edge.firstNode) || this.state.connectedNodes.includes(edge.secondNode) ) {
                 let edgeIndex = this.props.edges.findIndex( (propEdge: Edge) => propEdge===edge)
                 if(edgeIndex>=0 && !this.props.p1Edges.includes(edgeIndex) && !this.props.p2Edges.includes(edgeIndex)) {
                     this.props.claimEdge(edge, this.p1sTurn)
-                    this.props.updateError(undefined)
+                    this.props.resetFeedback()
                     this.p1sTurn = !this.p1sTurn
                 } else {
-                    this.props.updateError("EDGE ALREADY CLAIMED")
+                    this.props.setErrorMessage("EDGE ALREADY CLAIMED")
                 }
             } else {
-                this.props.updateError("INVALID EDGE SELECTION")
+                this.props.setErrorMessage("INVALID EDGE SELECTION")
             }
         }
     }
