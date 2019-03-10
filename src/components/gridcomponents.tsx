@@ -9,19 +9,7 @@ import { Block, Edge } from '../helpers/customtypes'
 export const EmptyBlock = styled.div`
     width:${BLOCKSIZE}px;
     height:inherit;
-    /* background-color: rgb(200, 200, 10); */
     margin: 0;
-    /* &:nth-child(odd) {
-        background-color:rgb(10, 200, 10);
-        &:hover {
-            background-color:green;
-        }
-    }
-    &:nth-child(even) {
-        &:hover{
-            background-color:blue;
-        }
-    } */
 `
 
 type NodeProps = {
@@ -107,7 +95,31 @@ export const EdgeElement = styled.div.attrs<ElementProps>({
     &:hover {
         border:2px solid white;
     }
-` 
+`
+
+// export const EdgeComponent2 = styled.div.attrs<EdgeProps>({
+//     style: (props: EdgeProps) => ({
+//         backgroundColor: `rgb(${props.colour[0]} ${props.colour[1]} ${props.colour[2]})`,
+//         top: `${props.top}px`,
+//         left: `${props.left}px`,
+//         width:`${props.width}px`,
+
+//         transform: `rotate(${props.rotation}rad)`,
+//         zIndex: `${props.zIndex}`,
+//     }),
+//     onClick: (event: React.MouseEvent<HTMLElement>, props: EdgeProps) => props.dispatchClick(props.edge),
+//     onMouseEnter: (event: React.MouseEvent<HTMLElement>, props: EdgeProps) => props.dispatchHover(props.edge.points),
+//     onMouseLeave: (event: React.MouseEvent<HTMLElement>, props:EdgeProps) => props.dispatchHover(),
+// })`
+//     box-sizing:border-box;
+//     position:absolute;
+//     height:${Math.floor(BLOCKSIZE/5)}px;
+//     transform-origin:0 0 0;
+
+//     &:hover {
+//         border:2px solid white;
+//     }
+// `
 
 interface EdgeProps {
     top: number,
@@ -116,7 +128,7 @@ interface EdgeProps {
     rotation: number,
     zIndex: number,
     dispatchClick: (edge:Edge) => void,
-    dispatchHover: (points: number|undefined) => void,
+    dispatchHover: (points?: number) => void,
     colour: [number, number, number]
     edge: Edge
 }
@@ -131,7 +143,7 @@ export const EdgeComponent = (props: EdgeProps) => {
     }
 
     const handleMouseLeave = (event: React.MouseEvent<HTMLElement>) => {
-        return props.dispatchHover(undefined)
+        return props.dispatchHover()
     }
 
     return <EdgeElement top={props.top} left={props.left} width={props.width} 

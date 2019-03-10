@@ -1,4 +1,4 @@
-import {Action, Reducer} from 'redux'
+import { Action, Reducer } from 'redux'
 
 export type FeedbackMessage = string
 

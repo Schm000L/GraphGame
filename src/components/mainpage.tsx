@@ -13,7 +13,7 @@ import { changeEdges, resetClaimedEdges,EdgeState } from '../state-management/ed
 import { changeNodes } from '../state-management/nodes'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
-import { FeedbackMessage } from '../state-management/feedback'
+import { FeedbackMessage, FeedbackState  } from '../state-management/feedback'
 
 /* TODO:
  * Move some logic from grid.tsx to mainpage
@@ -69,12 +69,12 @@ const GameScoreBox = styled.div`
 `
 
 // TODO: Change ErrorBox to feedback box: Green for positive, red for negative.
-const ErrBox = styled.div`
+const FBox = styled.div`
     box-sizing:border-box;
     margin:0 auto;
     width:200px;
     height:100px;
-    background:red;
+    background: ${(props: {error: boolean}) => props.error ? 'red' : 'green'};
     margin-bottom:10px;
     display:flex;
     justify-content: center;
@@ -82,9 +82,9 @@ const ErrBox = styled.div`
     text-align:center;
 `
 
-const ErrorBox = (props: {message: FeedbackMessage}) => {
-    if(props.message)
-        return <ErrBox> {props.message} </ErrBox>
+const FeedbackBox = (props: FeedbackState) => {
+    if(props.feedbackMessage)
+        return <FBox error= {props.error}> {props.feedbackMessage} </FBox>
     else 
         return <></>
     }
@@ -120,7 +120,8 @@ const mapStateToProps = (state: RootState) => {
     return {
       grid: state.gridReducer.grid,
       edgeReducer: state.edgeReducer,
-      errorMessage: state.feedbackReducer.feedbackMessage
+      feedbackMessage: state.feedbackReducer.feedbackMessage,
+      error: state.feedbackReducer.error
     }
   }
 
@@ -147,7 +148,8 @@ interface MainPageProps extends StateProps, DispatchProps {
 interface StateProps {
     grid: Block[][],
     edgeReducer: EdgeState,
-    errorMessage: FeedbackMessage
+    feedbackMessage: FeedbackMessage,
+    error: boolean
 } 
 
 interface DispatchProps {
@@ -305,7 +307,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
                     <EdgeScore />
                     <GameArea>
                         <Container>
-                        <ErrorBox message={this.props.errorMessage}/>
+                        <FeedbackBox feedbackMessage={this.props.feedbackMessage} error={this.props.error}/>
                         </Container>
                         <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
                         <Container/>

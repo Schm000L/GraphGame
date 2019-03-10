@@ -1,4 +1,4 @@
-import {Action, Reducer} from 'redux'
+import { Action, Reducer } from 'redux'
 
 const intialState: HoveredState = {
     points: undefined,
@@ -17,7 +17,7 @@ export interface updateHoveredAction {
 }
 
 
-export const updateHovered = (points: number|undefined) => ({
+export const updateHovered = (points?: number) => ({
         type: UPDATE_HOVERED,
         points: points
 })
