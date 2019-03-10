@@ -25,29 +25,48 @@ export const EmptyBlock = styled.div`
     }
 `
 
-const NodeContainer = styled.div `
-    position:relative;
-    width:${BLOCKSIZE}px;
-    height:${BLOCKSIZE}px;
-    margin: 0;
-    background-color:rgb(200, 200, 10);
-    &:nth-child(odd) {
-        background-color:rgb(10, 200, 10);
-    }
-`
+// const NodeContainer = styled.div `
+//     position:relative;
+//     width:${BLOCKSIZE}px;
+//     height:${BLOCKSIZE}px;
+//     margin: 0;
+//     background-color:rgb(200, 200, 10);
+//     &:nth-child(odd) {
+//         background-color:rgb(10, 200, 10);
+//     }
+// `
 
 type NodeProps = {
     connected?: boolean
 }
 
-const NODE = styled.div `
+// const NODE = styled.div `
+//     box-sizing: border-box;
+//     width:${BLOCKSIZE}px;
+//     height:inherit;
+//     border-radius:${Math.floor(BLOCKSIZE/2)}px;
+//     background-color: ${(props:NodeProps = {connected: false}) => props.connected ? 'skyblue' : 'blue'};
+//     margin: 0;
+//     position:inherit;
+//     z-index:100;
+//     &:hover {
+//         background-color:white;
+//     }
+//     border:4px double navy;
+//     box-shadow: 0 0 10px 3px black inset;
+// `
+
+// export const Node = (props: NodeProps) => <NodeContainer><NODE connected={props.connected}/></NodeContainer>
+
+
+export const Node = styled.div `
     box-sizing: border-box;
     width:${BLOCKSIZE}px;
-    height:inherit;
+    height:${BLOCKSIZE}px;
     border-radius:${Math.floor(BLOCKSIZE/2)}px;
     background-color: ${(props:NodeProps = {connected: false}) => props.connected ? 'skyblue' : 'blue'};
     margin: 0;
-    position:inherit;
+    position:relative;
     z-index:100;
     &:hover {
         background-color:white;
@@ -55,9 +74,6 @@ const NODE = styled.div `
     border:4px double navy;
     box-shadow: 0 0 10px 3px black inset;
 `
-
-export const Node = (props: NodeProps) => <NodeContainer><NODE connected={props.connected}/></NodeContainer>
-
 
 interface RowProps{
     blocks: Block[],
@@ -93,29 +109,24 @@ export type ElementProps = {
     zIndex: number
 }
 
+export const EdgeElement = styled.div.attrs<ElementProps>({
+    style: (props: ElementProps) => ({
+        backgroundColor: `rgb(${props.colour[0]} ${props.colour[1]} ${props.colour[2]})`,
+        top: `${props.top}px`,
+        left: `${props.left}px`,
+        width:`${props.width}px`,
 
-// .attrs({
-    // Put all changing style attributes here!
-    // style: (props: {} | ElementProps) => ( {backgroundColor: `rgb(${props.colour[0]} ${props.colour[1]} ${props.colour[2]})`} )
-// })
-
-export const EdgeElement = styled.div`
+        transform: `rotate(${props.rotation}rad)`,
+        zIndex: `${props.zIndex}`,
+    } )
+})`
+    box-sizing:border-box;
     position: absolute;
-    top:${(props:ElementProps) => props.top}px;
-    left:${(props:ElementProps) => props.left}px;
-    
     height:${Math.floor(BLOCKSIZE/5)}px;
-    width:${(props:ElementProps) => props.width}px;
-    
-    background-color: rgb(${(props:ElementProps)=> `${props.colour[0]} ${props.colour[1]} ${props.colour[2]}`});
-
     transform-origin:0 0 0;
-    transform: rotate(${(props:ElementProps)=>props.rotation}rad);
-    z-index:${(props:ElementProps) => props.zIndex};
+
     &:hover {
         border:2px solid white;
-        height:6px;
-        width:${(props:ElementProps) => props.width-4}px;
     }
 ` 
 
