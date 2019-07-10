@@ -3,8 +3,7 @@ import styled from 'styled-components'
 import { BLOCKSIZE, COLUMNS } from '../config';
 import { Block, Edge } from '../helpers/customtypes'
 
-// TODO: Highlight connected nodes
-// Add visual aid when edge goes through a node
+// TODO: Add visual when edge goes through a node
 
 export const EmptyBlock = styled.div`
     width:${BLOCKSIZE}px;
@@ -63,7 +62,7 @@ export const BaseGrid = styled.div`
     width:${COLUMNS*BLOCKSIZE}px;
     padding:0;
     text-align:center;
-    border:1px solid hotpink;
+    border:1px solid black;
 `
 
 // TODO: Refactor Edge

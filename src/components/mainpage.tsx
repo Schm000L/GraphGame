@@ -17,9 +17,7 @@ import { FeedbackMessage, FeedbackState  } from '../state-management/feedback'
 
 /* TODO:
  * Move some logic from grid.tsx to mainpage
- * Display score
- * Clearly display winner
- * Add reset/newgame via button
+ * Cleary show whose turn it is
  */
 
 const ResetButton = styled.button`
@@ -62,13 +60,12 @@ const GameScoreBox = styled.div`
     box-sizing:border-box;
     height:inherit;
     width: 200px;
-    border-right:5px solid black;
+    border-right:${(props: GameScore) => props.p2 ? '' : '5px solid black'};
     background: ${(props: GameScore) => props.p2 ? 'green' : 'blue'};
     justify-content:center;
     align-items:center;
 `
 
-// TODO: Change ErrorBox to feedback box: Green for positive, red for negative.
 const FBox = styled.div`
     box-sizing:border-box;
     margin:0 auto;
@@ -95,10 +92,10 @@ const GameArea = styled.div`
     height:${ROWS*BLOCKSIZE}px;
 `
 
-const Container = styled.div`
+const SideContainer = styled.div`
     width:${(1920 - COLUMNS*BLOCKSIZE) / 2}px;
     height: inherit;
-    background:brown;
+    // background:brown;
     display:flex;
     justify-content: center;
     align-items:center;
@@ -115,10 +112,10 @@ const BottomRow = styled.div`
     padding-left:90px; // Should be same as resetbutton width
 `
 
-const Header = (props: {p1score: number, p2score:number} ) => {
+const Header = (props: {p1score: number, p2score:number, newGame?:() => void} ) => {
     return (
         <HeadBanner>
-            <Logo src={logo} alt="logo" />
+            <Logo src={logo} alt="logo" onClick={props.newGame ? props.newGame : ()=>{}}/>
             <GameScoreContainer>
                 <GameScoreBox> {props.p1score >= 0 ? props.p1score : '-'} </GameScoreBox>
                 <GameScoreBox p2> {props.p2score >= 0 ? props.p2score : '-'} </GameScoreBox>
@@ -239,7 +236,6 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
     }
 
     // TODO: Skriv roligare generering av träd (ej kompletta träd.)
-    // Skriv om så att den endast genererar bågar till noder 2 column bort.
     populateTree(nodes:Node[]) {
         let n:number = nodes.length
         let edges: Edge[] = [];
@@ -281,10 +277,6 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         this.setState({loading: false})
     }
 
-    // TODO: Reset selected edges variables.
-    // Create variables such that there are
-    // variables for points during this game
-    // and total points
     resetGrid = () => {
         this.setState({loading: true})
         
@@ -309,19 +301,24 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
 
         this.setState({loading: false})
     }
+
+    newGame = () => {
+        this.setState({p1Score: 0, p2Score: 0})
+        this.resetGrid()
+    }
   
     render(){
         if(!this.state.loading)
             return(
                 <>
-                    <Header p1score={this.state.p1Score} p2score={this.state.p2Score} />
+                    <Header p1score={this.state.p1Score} p2score={this.state.p2Score} newGame={this.newGame}/>
                     <EdgeScore />
                     <GameArea>
-                        <Container>
+                        <SideContainer>
                         <FeedbackBox feedbackMessage={this.props.feedbackMessage} error={this.props.error}/>
-                        </Container>
+                        </SideContainer>
                         <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
-                        <Container/>
+                        <SideContainer/>
                     </GameArea>
                     <BottomRow>
                         <RoundScore/>
