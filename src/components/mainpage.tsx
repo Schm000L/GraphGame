@@ -24,7 +24,7 @@ import { FeedbackMessage, FeedbackState  } from '../state-management/feedback'
 
 const ResetButton = styled.button`
     background-color:red;
-    float:right;
+    width:90px;
 `
 
 const HeadBanner = styled.header `
@@ -102,6 +102,17 @@ const Container = styled.div`
     display:flex;
     justify-content: center;
     align-items:center;
+`
+
+const BottomRow = styled.div`
+    height: 25px;
+    width:${COLUMNS*BLOCKSIZE}px;
+    box-sizing: border-box;
+    display:flex;
+    flex-direction: row; 
+    margin:0 auto;
+    justify-content:space-between;
+    padding-left:90px; // Should be same as resetbutton width
 `
 
 const Header = (props: {p1score: number, p2score:number} ) => {
@@ -312,8 +323,10 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
                         <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
                         <Container/>
                     </GameArea>
-                    <RoundScore/>
-                    <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
+                    <BottomRow>
+                        <RoundScore/>
+                        <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
+                    </BottomRow>
                 </>
             )
         return(
