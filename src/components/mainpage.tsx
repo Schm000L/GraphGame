@@ -3,9 +3,10 @@ import Grid from './grid';
 import EdgeScore from './edgescore'
 import RoundScore from './roundscore'
 import logo from '../logo.svg';
-import { ROWS, COLUMNS } from '../config'
+import { ROWS, COLUMNS, BLOCKSIZE } from '../config'
 import { Block, Edge, Node } from '../helpers/customtypes'
-import { HeadBanner, GameScoreContainer, GameScoreBox, GameArea, SideContainer, TopContainer, FeedbackBox, Logo, ResetButton } from './gridcomponents'
+import { HeadBanner, GameScoreContainer, GameScoreBox, GameArea, SideContainer, FeedbackBox, Logo, ResetButton } from './gridcomponents'
+// import {TopContainer} from './gridcomponents'
 
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
@@ -13,18 +14,49 @@ import { updateBlock, changeGrid } from '../state-management/grid'
 import { changeEdges, resetClaimedEdges,EdgeState } from '../state-management/edges'
 import { changeNodes } from '../state-management/nodes'
 import { FeedbackMessage } from '../state-management/feedback'
+import styled from 'styled-components';
 
 /* TODO:
  * Move some logic from grid.tsx to mainpage
- * Display score
- * Clearly display winner
- * Add reset/newgame via button
+ * Cleary show whose turn it is
  */
 
-const Header = (props: {p1score: number, p2score:number} ) => {
+// type GameScore = {
+//     p2?: boolean
+// }
+
+// const FBox = styled.div`
+//     box-sizing:border-box;
+//     margin:0 auto;
+//     width:200px;
+//     height:100px;
+//     background: ${(props: {error: boolean}) => props.error ? 'red' : 'green'};
+//     margin-bottom:10px;
+//     display:flex;
+//     justify-content: center;
+//     align-items:center;
+//     text-align:center;
+// `
+
+const BottomRow = styled.div`
+    height: 25px;
+    width:${COLUMNS*BLOCKSIZE}px;
+    box-sizing: border-box;
+    display:flex;
+    flex-direction: row; 
+    margin:0 auto;
+    justify-content:space-between;
+`
+
+const DummyDiv = styled.div`
+    height:25px;
+    width:90px;
+`
+
+const Header = (props: {p1score: number, p2score:number, newGame?:() => void} ) => {
     return (
         <HeadBanner>
-            <Logo src={logo} alt="logo" />
+            <Logo src={logo} alt="logo" onClick={props.newGame ? props.newGame : ()=>{}}/>
             <GameScoreContainer>
                 <GameScoreBox> {props.p1score >= 0 ? props.p1score : '-'} </GameScoreBox>
                 <GameScoreBox p2> {props.p2score >= 0 ? props.p2score : '-'} </GameScoreBox>
@@ -145,7 +177,6 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
     }
 
     // TODO: Skriv roligare generering av träd (ej kompletta träd.)
-    // Skriv om så att den endast genererar bågar till noder 2 column bort.
     populateTree(nodes:Node[]) {
         let n:number = nodes.length
         let edges: Edge[] = [];
@@ -187,10 +218,6 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         this.setState({loading: false})
     }
 
-    // TODO: Reset selected edges variables.
-    // Create variables such that there are
-    // variables for points during this game
-    // and total points
     resetGrid = () => {
         this.setState({loading: true})
         
@@ -215,12 +242,17 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
 
         this.setState({loading: false})
     }
+
+    newGame = () => {
+        this.setState({p1Score: 0, p2Score: 0})
+        this.resetGrid()
+    }
   
     render(){
         if(!this.state.loading)
             return(
                 <>
-                    <Header p1score={this.state.p1Score} p2score={this.state.p2Score} />
+                    {/* <Header p1score={this.state.p1Score} p2score={this.state.p2Score} />
                     <TopContainer>
                         <FeedbackBox feedbackMessage={this.props.feedbackMessage} error={this.props.error}/>
                         <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
@@ -231,7 +263,21 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
                         <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
                         <SideContainer/>
                     </GameArea>
-                    <RoundScore/>
+                    <RoundScore/> */}
+                    <Header p1score={this.state.p1Score} p2score={this.state.p2Score} newGame={this.newGame}/>
+                    <EdgeScore />
+                    <GameArea>
+                        <SideContainer>
+                        <FeedbackBox feedbackMessage={this.props.feedbackMessage} error={this.props.error}/>
+                        </SideContainer>
+                        <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
+                        <SideContainer/>
+                    </GameArea>
+                    <BottomRow>
+                        <DummyDiv/>
+                        <RoundScore/>
+                        <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
+                    </BottomRow>
                 </>
             )
         return(

@@ -4,7 +4,7 @@ import { BLOCKSIZE, COLUMNS, ROWS } from '../config';
 import { Block, Edge } from '../helpers/customtypes'
 import { FeedbackState } from '../state-management/feedback'
 
-// TODO: Add visual aid when edge goes through a node
+// TODO: Add visual when edge goes through a node
 
 // ---------------------------------------- [Mainpage] ----------------------------------------
 export const HeadBanner = styled.header `
@@ -194,6 +194,7 @@ export const BaseGrid = styled.div`
     background-color: palegoldenrod;
     /* border:1px solid hotpink; */
     /* border-radius:3px; */
+    border:1px solid black;
 `
 
 // ---------------------------------------- [Edge] ----------------------------------------

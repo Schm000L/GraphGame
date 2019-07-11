@@ -122,7 +122,6 @@ class Grid extends React.Component<GridProps,GridState> {
         return connNodes
     }
 
-    // TODO: See if simplyfiable with .reduce
     getConnectedNodesByRow(row:number) {
         let connNodes = this.getConnectedNodes()
         let connectedNodesOnRow:number[] = []
@@ -131,7 +130,7 @@ class Grid extends React.Component<GridProps,GridState> {
             if(this.props.nodes[conn][0] === row)
             connectedNodesOnRow.push(this.props.nodes[conn][1])
         })
-
+            
         return connectedNodesOnRow
     }
 
