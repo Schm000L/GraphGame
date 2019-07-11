@@ -7,13 +7,20 @@ import { Edge } from 'src/helpers/customtypes';
 const RoundBox = styled.div`
     display:flex;
     box-sizing:border-box;
-    margin:0 auto;
+    // margin:0 auto;
     width:400px;
     height:25px;
-    background:hotpink;
+    background:linear-gradient(90deg, blue 0%, green 70%);
     margin-bottom:10px;
     align-items:center;
     justify-content:center;
+`
+
+const PlayerRoundBox = styled.div`
+    box-sizing:border-box;
+    height:inherit;
+    width:200px;
+    background:white;
 `
 
 interface RoundScoreState {
@@ -60,7 +67,7 @@ class RoundScore extends React.Component<RoundScoreProps,RoundScoreState> {
 
     render(){
         let { p1score, p2score } = this.calculateScore()
-        return <RoundBox> P1-score: {p1score} || P2-score: {p2score} </RoundBox>
+        return <RoundBox><PlayerRoundBox>P1-score: {p1score}</PlayerRoundBox> <PlayerRoundBox>P2-score: {p2score}</PlayerRoundBox> </RoundBox>
     }
 }
 

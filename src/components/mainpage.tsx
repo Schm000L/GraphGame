@@ -109,7 +109,11 @@ const BottomRow = styled.div`
     flex-direction: row; 
     margin:0 auto;
     justify-content:space-between;
-    padding-left:90px; // Should be same as resetbutton width
+`
+
+const DummyDiv = styled.div`
+    height:25px;
+    width:90px;
 `
 
 const Header = (props: {p1score: number, p2score:number, newGame?:() => void} ) => {
@@ -321,6 +325,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
                         <SideContainer/>
                     </GameArea>
                     <BottomRow>
+                        <DummyDiv/>
                         <RoundScore/>
                         <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
                     </BottomRow>
