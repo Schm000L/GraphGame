@@ -1,19 +1,18 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import Grid from './grid';
 import EdgeScore from './edgescore'
 import RoundScore from './roundscore'
 import logo from '../logo.svg';
-import { ROWS, COLUMNS, BLOCKSIZE } from '../config'
+import { ROWS, COLUMNS } from '../config'
 import { Block, Edge, Node } from '../helpers/customtypes'
+import { HeadBanner, GameScoreContainer, GameScoreBox, GameArea, SideContainer, TopContainer, FeedbackBox, Logo, ResetButton } from './gridcomponents'
 
-
+import { connect } from 'react-redux';
+import { RootState } from '../state-management/combiner';
 import { updateBlock, changeGrid } from '../state-management/grid'
 import { changeEdges, resetClaimedEdges,EdgeState } from '../state-management/edges'
 import { changeNodes } from '../state-management/nodes'
-import { connect } from 'react-redux';
-import { RootState } from '../state-management/combiner';
-import { FeedbackMessage, FeedbackState  } from '../state-management/feedback'
+import { FeedbackMessage } from '../state-management/feedback'
 
 /* TODO:
  * Move some logic from grid.tsx to mainpage
@@ -21,88 +20,6 @@ import { FeedbackMessage, FeedbackState  } from '../state-management/feedback'
  * Clearly display winner
  * Add reset/newgame via button
  */
-
-const ResetButton = styled.button`
-    background-color:red;
-    float:right;
-`
-
-const HeadBanner = styled.header `
-    background-color: #222;
-    width: 100%;
-    height: 90px;
-    margin-bottom:10px;
-    color: white;
-`
-const Logo = styled.img`
-    animation: App-logo-spin infinite 20s linear;
-    height: 80px;
-    @keyframes App-logo-spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-    position:absolute;
-    top:5px;
-`
-const GameScoreContainer = styled.div`
-    margin: 0 auto;
-    height: inherit;
-    width: 400px;
-    background:red;
-    display:flex;
-    flex-direction:row;
-`
-
-type GameScore = {
-    p2?: boolean
-}
-
-const GameScoreBox = styled.div`
-    display:flex;
-    box-sizing:border-box;
-    height:inherit;
-    width: 200px;
-    border-right:5px solid black;
-    background: ${(props: GameScore) => props.p2 ? 'green' : 'blue'};
-    justify-content:center;
-    align-items:center;
-`
-
-// TODO: Change ErrorBox to feedback box: Green for positive, red for negative.
-const FBox = styled.div`
-    box-sizing:border-box;
-    margin:0 auto;
-    width:200px;
-    height:100px;
-    background: ${(props: {error: boolean}) => props.error ? 'red' : 'green'};
-    margin-bottom:10px;
-    display:flex;
-    justify-content: center;
-    align-items:center;
-    text-align:center;
-`
-
-const FeedbackBox = (props: FeedbackState) => {
-    if(props.feedbackMessage)
-        return <FBox error= {props.error}> {props.feedbackMessage} </FBox>
-    else 
-        return <></>
-    }
-const GameArea = styled.div`
-    display:flex;
-    flex-direction:row;
-    width:100%;
-    height:${ROWS*BLOCKSIZE}px;
-`
-
-const Container = styled.div`
-    width:${(1920 - COLUMNS*BLOCKSIZE) / 2}px;
-    height: inherit;
-    background:brown;
-    display:flex;
-    justify-content: center;
-    align-items:center;
-`
 
 const Header = (props: {p1score: number, p2score:number} ) => {
     return (
@@ -304,16 +221,17 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
             return(
                 <>
                     <Header p1score={this.state.p1Score} p2score={this.state.p2Score} />
-                    <EdgeScore />
-                    <GameArea>
-                        <Container>
+                    <TopContainer>
                         <FeedbackBox feedbackMessage={this.props.feedbackMessage} error={this.props.error}/>
-                        </Container>
+                        <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
+                        <EdgeScore />
+                    </TopContainer>
+                    <GameArea>
+                        <SideContainer/>
                         <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
-                        <Container/>
+                        <SideContainer/>
                     </GameArea>
                     <RoundScore/>
-                    <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
                 </>
             )
         return(

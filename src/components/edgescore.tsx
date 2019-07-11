@@ -1,19 +1,7 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
-
-const EdgeBox = styled.div`
-    display:flex;
-    box-sizing:border-box;
-    margin:0 auto;
-    width:400px;
-    height:25px;
-    background:hotpink;
-    margin-bottom:10px;
-    align-items:center;
-    justify-content:center;
-`
+import { ScoreBox } from './gridcomponents'
 
 interface EdgeScoreState {
 }
@@ -36,7 +24,7 @@ const mapStateToProps = (state: RootState) => {
 
 class EdgeScore extends React.Component<EdgeScoreProps,EdgeScoreState> {
     render(){
-        return <EdgeBox>Edge score: {this.props.points !== undefined ? this.props.points : '-'}</EdgeBox>
+        return <ScoreBox>Edge score: {this.props.points !== undefined ? this.props.points : '-'}</ScoreBox>
     }
 }
 

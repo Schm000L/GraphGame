@@ -1,20 +1,8 @@
 import * as React from 'react'
-import styled from 'styled-components'
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
 import { Edge } from 'src/helpers/customtypes';
-
-const RoundBox = styled.div`
-    display:flex;
-    box-sizing:border-box;
-    margin:0 auto;
-    width:400px;
-    height:25px;
-    background:hotpink;
-    margin-bottom:10px;
-    align-items:center;
-    justify-content:center;
-`
+import { ScoreBox } from './gridcomponents'
 
 interface RoundScoreState {
 }
@@ -60,7 +48,7 @@ class RoundScore extends React.Component<RoundScoreProps,RoundScoreState> {
 
     render(){
         let { p1score, p2score } = this.calculateScore()
-        return <RoundBox> P1-score: {p1score} || P2-score: {p2score} </RoundBox>
+        return <ScoreBox round> P1-score: {p1score} || P2-score: {p2score} </ScoreBox>
     }
 }
 

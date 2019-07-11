@@ -184,7 +184,7 @@ class Grid extends React.Component<GridProps,GridState> {
         
             return(
                 <>
-                <BaseGrid style={{width: `${50*this.props.rows}`, backgroundColor: 'pink'}}>
+                <BaseGrid style={{width: `${50*this.props.rows}`}}>
                     {toRender}
                     {this.renderEdges()}
                 </BaseGrid>
