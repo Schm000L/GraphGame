@@ -5,8 +5,8 @@ import RoundScore from './roundscore'
 import logo from '../logo.svg';
 import { ROWS, COLUMNS, BLOCKSIZE } from '../config'
 import { Block, Edge, Node } from '../helpers/customtypes'
-import { HeadBanner, GameScoreContainer, GameScoreBox, GameArea, SideContainer, FeedbackBox, Logo, ResetButton } from './gridcomponents'
-// import {TopContainer} from './gridcomponents'
+import { HeadBanner, GameScoreContainer, GameScoreBox, GameArea, Logo, ResetButton } from './gridcomponents'
+import {FeedbackBox, TopContainer} from './gridcomponents'
 
 import { connect } from 'react-redux';
 import { RootState } from '../state-management/combiner';
@@ -38,9 +38,9 @@ import styled from 'styled-components';
 //     text-align:center;
 // `
 
-const BottomRow = styled.div`
+const BottomContainer = styled.div`
     height: 25px;
-    width:${COLUMNS*BLOCKSIZE}px;
+    width:${COLUMNS*BLOCKSIZE+2}px;
     box-sizing: border-box;
     display:flex;
     flex-direction: row; 
@@ -48,10 +48,10 @@ const BottomRow = styled.div`
     justify-content:space-between;
 `
 
-const DummyDiv = styled.div`
-    height:25px;
-    width:90px;
-`
+// const DummyDiv = styled.div`
+//     height:25px;
+//     width:90px;
+// `
 
 const Header = (props: {p1score: number, p2score:number, newGame?:() => void} ) => {
     return (
@@ -252,32 +252,19 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         if(!this.state.loading)
             return(
                 <>
-                    {/* <Header p1score={this.state.p1Score} p2score={this.state.p2Score} />
+                    <Header p1score={this.state.p1Score} p2score={this.state.p2Score} newGame={this.newGame}/>
                     <TopContainer>
                         <FeedbackBox feedbackMessage={this.props.feedbackMessage} error={this.props.error}/>
                         <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
                         <EdgeScore />
                     </TopContainer>
                     <GameArea>
-                        <SideContainer/>
                         <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
-                        <SideContainer/>
                     </GameArea>
-                    <RoundScore/> */}
-                    <Header p1score={this.state.p1Score} p2score={this.state.p2Score} newGame={this.newGame}/>
-                    <EdgeScore />
-                    <GameArea>
-                        <SideContainer>
-                        <FeedbackBox feedbackMessage={this.props.feedbackMessage} error={this.props.error}/>
-                        </SideContainer>
-                        <Grid gameScoreUpdate={this.gameScoreUpdate} rows={ROWS} columns={COLUMNS} nodes={this.nodes}/>
-                        <SideContainer/>
-                    </GameArea>
-                    <BottomRow>
-                        <DummyDiv/>
+                    <BottomContainer>
+                        {/* <DummyDiv/> */}
                         <RoundScore/>
-                        <ResetButton style={this.resetStyle} onClick={this.resetGrid}>NEW GRAPH</ResetButton>
-                    </BottomRow>
+                    </BottomContainer>
                 </>
             )
         return(

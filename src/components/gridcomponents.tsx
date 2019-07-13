@@ -54,7 +54,7 @@ export const ScoreBox = styled.div`
     display:flex;
     box-sizing:border-box;
     margin:0 auto;
-    width: ${COLUMNS*BLOCKSIZE}px;
+    width: ${COLUMNS*BLOCKSIZE+2}px;
     /* width:400px; */
     height:25px;
     background:hotpink;
@@ -117,6 +117,7 @@ export const FeedbackBox = (props: FeedbackState) => {
 export const GameArea = styled.div`
     display:flex;
     flex-direction:row;
+    justify-content:space-evenly;
     width:100%;
     height:${ROWS*BLOCKSIZE}px;
 `
@@ -189,11 +190,12 @@ export const BaseGrid = styled.div`
     display:flex;
     flex-direction:column;
     width:${COLUMNS*BLOCKSIZE}px;
-    padding:0;
+    padding:1px;
     text-align:center;
     background-color: palegoldenrod;
     /* border:1px solid hotpink; */
     /* border-radius:3px; */
+    /* margin:0 auto; */
     border:1px solid black;
 `
 
